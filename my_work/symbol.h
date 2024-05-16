@@ -11,6 +11,8 @@ struct symbolTag
 struct symbolTag *newSymbol(int sym, int left,
                             int right, char *value)
 {
+  // printf("newSymbol(%d,%d,%d,\"%-s\")\n",
+  //        sym, left, right, value);
   struct symbolTag *p=malloc(sizeof(symbol));
   p->sym = sym;
   p->left = left;

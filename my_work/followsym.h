@@ -18,6 +18,7 @@ void followsyminit()
   factor[symEND] = 1;
   factor[symTHEN] = 1;
   factor[symDO] = 1;
+  factor[symNUMBER] = 1;
   term[symPERIOD] = 1;
   term[symSEMI] = 1;
   term[symRPAREN] = 1;
@@ -26,12 +27,14 @@ void followsyminit()
   term[symEND] = 1;
   term[symTHEN] = 1;
   term[symDO] = 1;
+  term[symNUMBER] = 1;
   expression[symPERIOD] = 1;
   expression[symSEMI] = 1;
   expression[symRPAREN] = 1;
   expression[symEND] = 1;
   expression[symTHEN] = 1;
   expression[symDO] = 1;
+  expression[symNUMBER] = 1;
   condition[symTHEN] = 1;
   condition[symDO] = 1;
   statement[symPERIOD] = 1;

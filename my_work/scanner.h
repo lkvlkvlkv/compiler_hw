@@ -184,14 +184,19 @@ struct symbolTag *nextToken()
       case '\t':
       case '\r':
       case '\n':
-        advance();          //©¿²¤ªÅ¥Õ¦r¤¸
+        advance();          //ï¿½ï¿½ï¿½ï¿½ï¿½Å¥Õ¦rï¿½ï¿½
         break;
       case -1:
         return NULL;
       default:
-        s[n++]=nextChar;
+        while (nextChar!='\0' && nextChar!=' '&&
+               nextChar!='\t' && nextChar!='\r'&&
+               nextChar!='\n' && nextChar!=-1)
+        {
+          s[n++]=nextChar;
+          advance();
+        }
         s[n]='\0';
-        advance();
         return newSymbol(symerror, linenum,cp,s);
       }
     }
