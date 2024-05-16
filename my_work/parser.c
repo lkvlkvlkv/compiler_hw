@@ -3,19 +3,19 @@
 #include <stdlib.h>
 #include <string.h>
 /*
-** 自訂表頭檔
+** ?菢q?簎Y檔
 */
   #include "scanner.h"
   #include "resword.h"
   #include "err.h"
   #include "followsym.h"
 /*
-** 自訂常數
+** ?菢q常數
 */
   #define IDLEN      36
   #define BUFSIZE   512
 /*
-** 自訂函式原型
+** ?菢q函式?鴢?
 */
   void Identifier();
   void Number();
@@ -334,6 +334,11 @@
         Error(13);
         skip(statement, 23);
       }
+      if (strcmp(token->value, "ELSE")==0)
+      {
+        token = nextToken();
+        Statement();
+      }
     }
     else
     {
@@ -490,7 +495,9 @@
   {
     Factor();
     while (token->sym == symMUL ||
-           token->sym == symDIV)
+           token->sym == symDIV ||
+           strcmp(token->value, "MOD")==0||
+           strcmp(token->value, "DIV")==0)
     {
       token = nextToken();
       Factor();
@@ -519,7 +526,7 @@
     }
   }
 /*
-** 識別字符記處理
+** 識?O?r符記處理
 */
   void Identifier()
   {
@@ -529,7 +536,7 @@
       Error(21);
   }
 /*
-** 數字符記處理
+** 數?r符記處理
 */
   void Number()
   {
@@ -539,7 +546,7 @@
       Error(22);
   }
 /*
-************************** 主程式 **********************
+************************** ?D程式 **********************
 */
   int main(int argc, char *argv[])
   {
