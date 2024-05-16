@@ -3,19 +3,19 @@
 #include <stdlib.h>
 #include <string.h>
 /*
-** ?è¢q?ç°Yæª”
+** ?Û­q?íÀYÀÉ
 */
   #include "scanner.h"
   #include "resword.h"
   #include "err.h"
   #include "followsym.h"
 /*
-** ?è¢qå¸¸æ•¸
+** ?Û­q±`¼Æ
 */
   #define IDLEN      36
   #define BUFSIZE   512
 /*
-** ?è¢qå‡½å¼?é´¢?
+** ?Û­q¨ç¦¡?ì«?
 */
   void Identifier();
   void Number();
@@ -39,7 +39,7 @@
   void ProgramHead();
   void Program();
 /*
-** æ•´é«”è®Šæ•¸
+** ¾ãÅéÅÜ¼Æ
 */
   struct symbolTag *token;
   int errorCount = 0;
@@ -70,7 +70,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#1 <Program>
+** »yªk³W«h#1 <Program>
 */
   void Program()
   {
@@ -79,7 +79,7 @@
     if (token->sym != symPERIOD) Error(0);
   }
 /*
-** èªæ³•è¦å‰‡#2 <ProgramHead>
+** »yªk³W«h#2 <ProgramHead>
 */
   void ProgramHead()
   {
@@ -101,7 +101,7 @@
       Error(1);
   }
 /*
-** èªæ³•è¦å‰‡#3 <Block>
+** »yªk³W«h#3 <Block>
 */
   void Block()
   {
@@ -114,7 +114,7 @@
     CompoundStatement();
   }
 /*
-** èªæ³•è¦å‰‡#4 <ConstDeclaration>
+** »yªk³W«h#4 <ConstDeclaration>
 */
   void ConstDeclaration()
   {
@@ -177,7 +177,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#5 <VarDeclaration>
+** »yªk³W«h#5 <VarDeclaration>
 */
   void VarDeclaration()
   {
@@ -201,7 +201,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#6 <ProcDeclaration>
+** »yªk³W«h#6 <ProcDeclaration>
 */
   void ProcDeclaration()
   {
@@ -230,7 +230,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#7 <Statement>
+** »yªk³W«h#7 <Statement>
 */
   void Statement()
   {
@@ -255,7 +255,7 @@
       skip(statement, 23);
   }
 /*
-** èªæ³•è¦å‰‡#8 <AssignmentStatement>
+** »yªk³W«h#8 <AssignmentStatement>
 */
   void AssignmentStatement()
   {
@@ -264,6 +264,8 @@
     {
       token = nextToken();
       Expression();
+      if (token->sym != symSEMI)
+        skip(statement, 23);
     }
     else
     {
@@ -272,7 +274,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#9 <CallStatement>
+** »yªk³W«h#9 <CallStatement>
 */
   void CallStatement()
   {
@@ -288,7 +290,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#10 <CompoundStatement>
+** »yªk³W«h#10 <CompoundStatement>
 */
   void CompoundStatement()
   {
@@ -316,7 +318,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#11 <IfStatement>
+** »yªk³W«h#11 <IfStatement>
 */
   void IfStatement()
   {
@@ -347,7 +349,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#12 <WhileStatement>
+** »yªk³W«h#12 <WhileStatement>
 */
   void WhileStatement()
   {
@@ -373,7 +375,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#13 <ReadStatement>
+** »yªk³W«h#13 <ReadStatement>
 */
   void ReadStatement()
   {
@@ -405,7 +407,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#14 <WriteStatement>
+** »yªk³W«h#14 <WriteStatement>
 */
   void WriteStatement()
   {
@@ -437,7 +439,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#15 <IdentifierList>
+** »yªk³W«h#15 <IdentifierList>
 */
   void IdentifierList()
   {
@@ -449,7 +451,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#16 <Condition>
+** »yªk³W«h#16 <Condition>
 */
   void Condition()
   {
@@ -470,7 +472,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#17 <Expression>
+** »yªk³W«h#17 <Expression>
 */
   void Expression()
   {
@@ -488,7 +490,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#18 <Term>
+** »yªk³W«h#18 <Term>
 */
   void Term()
   {
@@ -503,7 +505,7 @@
     }
   }
 /*
-** èªæ³•è¦å‰‡#19 <Factor>
+** »yªk³W«h#19 <Factor>
 */
   void Factor()
   {
@@ -525,7 +527,7 @@
     }
   }
 /*
-** è­˜?O?rç¬¦è¨˜è™•ç†
+** ÃÑ?O?r²Å°O³B²z
 */
   void Identifier()
   {
@@ -535,7 +537,7 @@
       Error(21);
   }
 /*
-** æ•¸?rç¬¦è¨˜è™•ç†
+** ¼Æ?r²Å°O³B²z
 */
   void Number()
   {
@@ -545,7 +547,7 @@
       Error(22);
   }
 /*
-************************** ?Dç¨‹å¼ **********************
+************************** ?Dµ{¦¡ **********************
 */
   int main(int argc, char *argv[])
   {
