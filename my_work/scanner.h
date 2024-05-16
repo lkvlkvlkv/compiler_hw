@@ -189,14 +189,9 @@ struct symbolTag *nextToken()
       case -1:
         return NULL;
       default:
-        while (nextChar!='\0' && nextChar!=' '&&
-               nextChar!='\t' && nextChar!='\r'&&
-               nextChar!='\n' && nextChar!=-1)
-        {
-          s[n++]=nextChar;
-          advance();
-        }
+        s[n++]=nextChar;
         s[n]='\0';
+        advance();
         return newSymbol(symerror, linenum,cp,s);
       }
     }
