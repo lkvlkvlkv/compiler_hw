@@ -466,8 +466,7 @@
     }
     else
     {
-      skip(expression, 20);
-      Expression();
+      skip(condition, 20);
     }
   }
 /*
