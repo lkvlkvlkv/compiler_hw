@@ -12,8 +12,8 @@ PROCEDURE bin;
     t:=x;
     WHILE t != 0 DO
     BEGIN
-    	y:=y*10+t % 2;
-    	t:= t \ 2;
+      y:=y*10+t % 2;
+      t:= t \ 2;
     END;
   END;
 BEGIN
