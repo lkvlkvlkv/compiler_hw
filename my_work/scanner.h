@@ -51,6 +51,8 @@ struct symbolTag *nextToken()
                nextChar >= 'A' && nextChar <= 'Z' ||
                nextChar>='0' && nextChar<='9');
       s[n]='\0';
+      if (strcmp(s, "DO") == 0)
+        return newSymbol(symDO, linenum, cp, s);
       return newSymbol(symIDENTIFIER,linenum,cp,s);
     }
     else if (nextChar>='0' && nextChar<='9')
