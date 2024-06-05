@@ -249,8 +249,12 @@ Identifier:
     ;
 
 Numeric:
-      INT
-    | FLOAT
+      INT {
+        printf("Numeric: %d\n", $1);
+      }
+    | FLOAT {
+        printf("Numeric: %f\n", $1);
+      }
     ;
 
 type:
