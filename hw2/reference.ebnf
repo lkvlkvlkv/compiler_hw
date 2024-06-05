@@ -1,0 +1,54 @@
+<Statement> ::= [<DeclarationStatement>|<AssignmentStatement>
+                 |<IfStatement>|<WhileStatement>|<ForStatement>]
+
+<DeclarationStatement> ::= <type> <DeclarationList>;
+
+<DeclarationList>::=\<Identifier>|<AssignExpression>\{,\<Identifier>|<AssignExpression>\}
+
+<AssignExpression> ::= <Identifier> = <Expression>
+
+<AssignmentStatement> ::= <AssignExpression>;
+
+<IfStatement> ::= <kw-if> '('<Condition>')' \<Block>|<statement>\
+                    [<kw-else> \<Block>|<statement>\]
+
+<Block> ::= '{' {<Statement>} '}'
+
+<CompoundStatement> ::= '{' <Statement>; {<Statement>;} '}'
+
+
+
+<WhileStatement> ::= <kw-while> '(' <Condition> ')' <Block>
+
+
+<Condition>   ::= Expression\<|<=|=|<>|>|>=\Expression
+<Expression> ::= [+|-]Term{\+|-\Term}
+<Term>::=Factor{\*|/\Factor}
+<Factor>::=Identifier|Numeric|(Expression)
+
+<identifier>	::= ( letter | '_' ) { letter | digit | '_' }
+<letter>		::= <upper-case> | <lower-case>
+<upper-case>	::= 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
+<lower-case>	::= 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z'
+<Numeric>     ::= <Int>|<Float>|<Double>
+<Double>      ::= <Float>
+<Float>       ::= <Int>.<Int>
+<Int>         ::= <Digit>{<Digit>}
+<Digit>       ::= 0|1|2|3|4|5|6|7|8|9
+
+<type>        ::= <kw-int> | <kw-double> | <kw-float>
+
+<kw-break>	::= "break"
+<kw-char>		::= "char"
+<kw-continue>	::= "continue"
+<kw-do>		::= "do"
+<kw-double>	::= "double"
+<kw-else>		::= "else"
+<kw-float> 	::= "float"
+<kw-for> 		::= "for"
+<kw-goto> 	::= "goto"
+<kw-if> 		::= "if"
+<kw-int> 		::= "int"
+<kw-long> 	::= "long"
+<kw-return> 	::= "return"
+<kw-while> 	::= "while"
