@@ -19,7 +19,7 @@ int main() {
 
     a = 5;
     b = a + 10;
-    c = b * 2;
+    c = (a + b) * 2 / testFunction(1, 2); 
 
     if (a == b) {
         c = a + b;
