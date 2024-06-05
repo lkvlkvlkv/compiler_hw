@@ -51,12 +51,12 @@ GlobalStatement:
     | Statement
     ;
 
-FunctionDefinition:
-      type Identifier '(' ParameterDeclarationList ')' ';'
+FunctionDeclaration:
+      type Identifier '(' ParameterDeclarationList ')' ';' 
     ;
 
-FunctionDeclaration:
-      type Identifier '(' ParameterDeclarationList ')' FunctionBlock
+FunctionDefinition:
+      type Identifier '(' ParameterDeclarationList ')' FunctionBlock 
     ;
 
 FunctionBlock:
