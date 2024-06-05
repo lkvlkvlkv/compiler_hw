@@ -46,6 +46,10 @@ int main() {
         x = x + y;
     }
 
+    do {
+        x = x - y;
+    } while (x > 0);
+
     testFunction(3 + 5, a + b);
 
     return 0;

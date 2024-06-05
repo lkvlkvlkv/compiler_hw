@@ -134,11 +134,17 @@ Statement:
     | IfStatement
     | WhileStatement
     | ForStatement
+    | DoWhileStatement
     | FunctionCallStatement {
         printf("FunctionCallStatement:\n");
       }
     ;
-  
+
+DoWhileStatement:
+      KW_DO Block KW_WHILE '(' Condition ')' ';' {
+        printf("DoWhileStatement:\n");
+      }
+
 IncludeStatement:
       '#' KW_INCLUDE HEADEREXPRESSION {
         printf("IncludeStatement:\n");
