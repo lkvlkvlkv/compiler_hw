@@ -1,0 +1,37 @@
+TOKEN: '#'
+TOKEN: KW_INCLUDE
+TOKEN: '<'
+TOKEN: IDENTIFIER stdio
+Identifier: stdio
+TOKEN: HEADER_FILE_END
+TOKEN: '>'
+TOKEN: '#'
+TOKEN: KW_INCLUDE
+TOKEN: '"'
+TOKEN: IDENTIFIER any
+Identifier: any
+TOKEN: HEADER_FILE_END
+TOKEN: '"'
+TOKEN: KW_INT
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '='
+TOKEN: FLOAT 1.5
+Numeric: 1.500000
+TOKEN: ','
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ','
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: ';'
+TOKEN: KW_VOID
+TOKEN: IDENTIFIER testFunction
+Identifier: testFunction
+TOKEN: '('
+TOKEN: KW_INT
+TOKEN: IDENTIFIER a
+TOKEN: ','
+TOKEN: IDENTIFIER in
+Error: syntax error, unexpected IDENTIFIER, expecting KW_VOID or KW_INT or KW_FLOAT at line 12, column 26...27, near 'in'
+

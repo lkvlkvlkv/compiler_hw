@@ -1,0 +1,5 @@
+TOKEN: '#'
+TOKEN: KW_INCLUDE
+TOKEN: IDENTIFIER stdio
+Error: syntax error, unexpected IDENTIFIER, expecting '<' or '"' at line 1, column 10...14, near 'stdio'
+

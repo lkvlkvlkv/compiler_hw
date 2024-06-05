@@ -1,0 +1,240 @@
+TOKEN: '#'
+TOKEN: KW_INCLUDE
+TOKEN: '<'
+TOKEN: IDENTIFIER stdio
+Identifier: stdio
+TOKEN: HEADER_FILE_END
+TOKEN: '>'
+TOKEN: '#'
+TOKEN: KW_INCLUDE
+TOKEN: '"'
+TOKEN: IDENTIFIER any
+Identifier: any
+TOKEN: HEADER_FILE_END
+TOKEN: '"'
+TOKEN: KW_INT
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '='
+TOKEN: FLOAT 1.5
+Numeric: 1.500000
+TOKEN: ','
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ','
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: ';'
+TOKEN: KW_VOID
+TOKEN: IDENTIFIER testFunction
+Identifier: testFunction
+TOKEN: '('
+TOKEN: KW_INT
+TOKEN: IDENTIFIER a
+TOKEN: ','
+TOKEN: KW_INT
+TOKEN: IDENTIFIER b
+TOKEN: ')'
+TOKEN: ';'
+TOKEN: KW_INT
+TOKEN: IDENTIFIER main
+Identifier: main
+TOKEN: '('
+TOKEN: ')'
+TOKEN: '{'
+TOKEN: KW_INT
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '='
+TOKEN: FLOAT 1.5
+Numeric: 1.500000
+TOKEN: ','
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ','
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: ';'
+TOKEN: KW_FLOAT
+TOKEN: IDENTIFIER z
+Identifier: z
+TOKEN: ';'
+TOKEN: KW_FLOAT
+TOKEN: IDENTIFIER x
+Identifier: x
+TOKEN: '='
+TOKEN: FLOAT 3.14
+Numeric: 3.140000
+TOKEN: ','
+TOKEN: IDENTIFIER y
+Identifier: y
+TOKEN: '='
+TOKEN: FLOAT 2.71
+Numeric: 2.710000
+TOKEN: ';'
+TOKEN: KW_INT
+TOKEN: IDENTIFIER z
+Identifier: z
+TOKEN: '='
+TOKEN: IDENTIFIER testFunction
+Identifier: testFunction
+TOKEN: '('
+TOKEN: INT 1
+Numeric: 1
+TOKEN: ','
+TOKEN: INT 2
+Numeric: 2
+TOKEN: ')'
+TOKEN: ';'
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '='
+TOKEN: INT 5
+Numeric: 5
+TOKEN: ';'
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: '='
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '+'
+TOKEN: INT 10
+Numeric: 10
+TOKEN: ';'
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: '='
+TOKEN: '('
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '+'
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ')'
+TOKEN: '*'
+TOKEN: INT 2
+Numeric: 2
+TOKEN: '/'
+TOKEN: IDENTIFIER testFunction
+Identifier: testFunction
+TOKEN: '('
+TOKEN: INT 1
+Numeric: 1
+TOKEN: ','
+TOKEN: INT 2
+Numeric: 2
+TOKEN: ')'
+TOKEN: ';'
+TOKEN: KW_IF
+TOKEN: '('
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: EQ
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ')'
+TOKEN: '{'
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: '='
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '+'
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ';'
+TOKEN: '}'
+TOKEN: KW_ELSE
+TOKEN: KW_IF
+TOKEN: '('
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '>'
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ')'
+TOKEN: '{'
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: '='
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '-'
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ';'
+TOKEN: '}'
+TOKEN: KW_ELSE
+TOKEN: '{'
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: '='
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '*'
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ';'
+TOKEN: '}'
+TOKEN: KW_IF
+TOKEN: '('
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '<'
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ')'
+TOKEN: '{'
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: '='
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '+'
+TOKEN: INT 3
+Numeric: 3
+TOKEN: ';'
+TOKEN: '}'
+TOKEN: KW_ELSE
+TOKEN: '{'
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: '='
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '-'
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ';'
+TOKEN: '}'
+TOKEN: KW_WHILE
+TOKEN: '('
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: '>'
+TOKEN: INT 0
+Numeric: 0
+TOKEN: ')'
+TOKEN: '{'
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: '='
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: '-'
+TOKEN: INT 1
+Numeric: 1
+TOKEN: ';'
+TOKEN: '}'
+TOKEN: KW_FOR
+TOKEN: '('
+TOKEN: KW_INT
+TOKEN: IDENTIFIER i
+Identifier: i
+TOKEN: '='
+TOKEN: INT 0
+Numeric: 0
+TOKEN: ';'
+TOKEN: ';'
+Error: syntax error, unexpected ';', expecting INT or FLOAT or IDENTIFIER or '(' at line 85, column 20...20, near ';'
+

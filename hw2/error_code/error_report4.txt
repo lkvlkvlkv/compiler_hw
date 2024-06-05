@@ -1,0 +1,80 @@
+TOKEN: '#'
+TOKEN: KW_INCLUDE
+TOKEN: '<'
+TOKEN: IDENTIFIER stdio
+Identifier: stdio
+TOKEN: HEADER_FILE_END
+TOKEN: '>'
+TOKEN: '#'
+TOKEN: KW_INCLUDE
+TOKEN: '"'
+TOKEN: IDENTIFIER any
+Identifier: any
+TOKEN: HEADER_FILE_END
+TOKEN: '"'
+TOKEN: KW_INT
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '='
+TOKEN: FLOAT 1.5
+Numeric: 1.500000
+TOKEN: ','
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ','
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: ';'
+TOKEN: KW_VOID
+TOKEN: IDENTIFIER testFunction
+Identifier: testFunction
+TOKEN: '('
+TOKEN: KW_INT
+TOKEN: IDENTIFIER a
+TOKEN: ','
+TOKEN: KW_INT
+TOKEN: IDENTIFIER b
+TOKEN: ')'
+TOKEN: ';'
+TOKEN: KW_INT
+TOKEN: IDENTIFIER main
+Identifier: main
+TOKEN: '('
+TOKEN: ')'
+TOKEN: '{'
+TOKEN: KW_INT
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '='
+TOKEN: FLOAT 1.5
+Numeric: 1.500000
+TOKEN: ','
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ','
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: ';'
+TOKEN: KW_FLOAT
+TOKEN: IDENTIFIER z
+Identifier: z
+TOKEN: ';'
+TOKEN: KW_FLOAT
+TOKEN: IDENTIFIER x
+Identifier: x
+TOKEN: '='
+TOKEN: FLOAT 3.14
+Numeric: 3.140000
+TOKEN: ','
+TOKEN: IDENTIFIER y
+Identifier: y
+TOKEN: '='
+TOKEN: FLOAT 2.71
+Numeric: 2.710000
+TOKEN: ';'
+TOKEN: KW_INT
+TOKEN: IDENTIFIER z
+Identifier: z
+TOKEN: IDENTIFIER testFunction
+Error: syntax error, unexpected IDENTIFIER, expecting ';' at line 31, column 12...23, near 'testFunction'
+

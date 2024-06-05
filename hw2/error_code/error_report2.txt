@@ -1,0 +1,23 @@
+TOKEN: '#'
+TOKEN: KW_INCLUDE
+TOKEN: '<'
+TOKEN: IDENTIFIER stdio
+Identifier: stdio
+TOKEN: HEADER_FILE_END
+TOKEN: '>'
+TOKEN: '#'
+TOKEN: KW_INCLUDE
+TOKEN: '"'
+TOKEN: IDENTIFIER any
+Identifier: any
+TOKEN: HEADER_FILE_END
+TOKEN: '"'
+TOKEN: KW_INT
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '='
+TOKEN: FLOAT 1.5
+Numeric: 1.500000
+TOKEN: IDENTIFIER b
+Error: syntax error, unexpected IDENTIFIER, expecting ';' at line 9, column 13...13, near 'b'
+
