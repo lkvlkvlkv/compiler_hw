@@ -4,6 +4,11 @@
 #include <stdlib.h>
 #include <string.h> // 添加這行以解決 strdup 警告
 extern int yylineno; // 添加這行以確保 yylineno 被定義
+int yycolumn = 1; // 添加這行以確保 yycolumn 被定義
+extern char* yytext; // 定義文本指針
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno; \
+    yylloc.first_column = yycolumn; yylloc.last_column = yycolumn+yyleng-1; \
+    yycolumn += yyleng;
 %}
 
 %x COMMENT
@@ -61,9 +66,10 @@ extern int yylineno; // 添加這行以確保 yylineno 被定義
 ";"             { printf("TOKEN: ';'\n"); return ';'; }
 "#"             { printf("TOKEN: '#'\n"); return '#'; }
 "."             { printf("TOKEN: '.'\n"); return '.'; }
-"\""             { printf("TOKEN: '\"'\n"); return '"'; }
+"\""            { printf("TOKEN: '\"'\n"); return '"'; }
 
-[ \t\n\r]+      { ; }
+[ \t\r]+        { ; }
+\n              { yycolumn = 1; yylineno++; }
 
 .               { fprintf(stderr, "unknown token: %s\n", yytext); }
 

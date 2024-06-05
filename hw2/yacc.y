@@ -247,8 +247,9 @@ type:
 %%  
 
 void yyerror(const char *s) {
-    fprintf(stderr, "Error: %s at line %d, column %d, near '%s'\n", s, yylloc.first_line, yylloc.first_column, yytext);
-    exit(1);
+    printf("Error: %s at line %d, column %d...%d, near '%s'\n\n", s, yylineno, yylloc.first_column, yylloc.last_column, yytext);
+    fprintf(stderr, "Error: %s at line %d, column %d...%d, near '%s'\n\n", s, yylineno, yylloc.first_column, yylloc.last_column, yytext);
+    return;
 }
 
 int main() {
