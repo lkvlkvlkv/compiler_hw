@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define YYERROR_VERBOSE 1
+
 void yyerror(const char *s);
 int yylex(void);
 extern int yylineno; // 定義行號變量
