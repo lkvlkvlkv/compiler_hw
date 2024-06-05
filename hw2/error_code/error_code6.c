@@ -24,9 +24,9 @@ int main() {
     if (a == b) {
         c = a + b;
     }
-    else f (a > b) {
+    else if (a > b) {
         c = a - b;
-    }
+    
     else {
         c = a * b;
     }
