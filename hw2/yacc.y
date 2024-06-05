@@ -140,10 +140,12 @@ HEADEREXPRESSION:
       '<' Identifier HEADER_FILE_END '>'
       | '"' Identifier HEADER_FILE_END '"'
 
+DeclarationExpression:
+      type DeclarationList
+    ;
+
 DeclarationStatement:
-      type DeclarationList ';' {
-        printf("DeclarationStatement:\n");
-      }
+      DeclarationExpression ';'
     ;
 
 DeclarationList:
@@ -185,14 +187,12 @@ WhileStatement:
     ;
 
 ForStatement:
-      KW_FOR '(' initStatement  Condition ';' AssignExpression ')' ForBlock {
-        printf("End ForStatement:\n");
-      }
+      KW_FOR '(' ForInitExpression ';' Condition ';' AssignExpression ')' ForBlock
     ;
 
-initStatement:
-      DeclarationStatement
-    | AssignmentStatement
+ForInitExpression:
+      DeclarationExpression
+    | AssignExpression
     ;
 
 Condition:
