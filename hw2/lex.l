@@ -17,6 +17,7 @@ extern int yylineno; // 添加這行以確保 yylineno 被定義
 \/\/            { BEGIN COMMENT; }
 <COMMENT>[^\n]* { ; }
 <COMMENT>\n     { BEGIN 0; }
+
 \/\*            { BEGIN MULTI_COMMENT; }
 <MULTI_COMMENT>[^*]* { ; }
 <MULTI_COMMENT>\*+[^*/]* { ; }
@@ -33,9 +34,7 @@ extern int yylineno; // 添加這行以確保 yylineno 被定義
 "char"          { printf("TOKEN: KW_CHAR\n"); return KW_CHAR; }
 "continue"      { printf("TOKEN: KW_CONTINUE\n"); return KW_CONTINUE; }
 "do"            { printf("TOKEN: KW_DO\n"); return KW_DO; }
-"goto"          { printf("TOKEN: KW_GOTO\n"); return KW_GOTO; }
 "return"        { printf("TOKEN: KW_RETURN\n"); return KW_RETURN; }
-"main"          { printf("TOKEN: KW_MAIN\n"); return KW_MAIN; }
 "include"       { printf("TOKEN: KW_INCLUDE\n"); return KW_INCLUDE; }
 "void"          { printf("TOKEN: KW_VOID\n"); return KW_VOID; }
 
