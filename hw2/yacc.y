@@ -70,24 +70,16 @@ FunctionStatements:
 
 FunctionStatement:
       Statement
-    | KW_RETURN Expression ';' {
-        printf("KW_RETURN:\n");
-      }
-    | KW_RETURN ';' {
-        printf("KW_RETURN:\n");
-      }
+    | KW_RETURN Expression ';'
+    | KW_RETURN ';'
     ;
 
 FunctionCallStatement:
-      FunctionCallExpression ';'{
-        printf("FunctionCallStatement:\n");
-      }
+      FunctionCallExpression ';'
     ;
 
 FunctionCallExpression:
-      Identifier '(' ParameterList ')' {
-        printf("FunctionCallExpression:\n");
-      }
+      Identifier '(' ParameterList ')'
     ;
 
 ParameterList:
@@ -122,12 +114,9 @@ ForBlockStatements:
 
 ForBlockStatement:
       Statement
-    | KW_CONTINUE ';' {
-        printf("KW_CONTINUE:\n");
-      }
-    | KW_BREAK ';' {
-        printf("KW_BREAK:\n");
-      }
+    | KW_CONTINUE ';'
+    | KW_BREAK ';'
+    | KW_RETURN Expression ';'
     ;
 
 Statement:
@@ -137,20 +126,14 @@ Statement:
     | WhileStatement
     | ForStatement
     | DoWhileStatement
-    | FunctionCallStatement {
-        printf("FunctionCallStatement:\n");
-      }
+    | FunctionCallStatement
     ;
 
 DoWhileStatement:
-      KW_DO Block KW_WHILE '(' Condition ')' ';' {
-        printf("DoWhileStatement:\n");
-      }
+      KW_DO Block KW_WHILE '(' Condition ')' ';'
 
 IncludeStatement:
-      '#' KW_INCLUDE HEADEREXPRESSION {
-        printf("IncludeStatement:\n");
-      }
+      '#' KW_INCLUDE HEADEREXPRESSION
     ;
   
 HEADEREXPRESSION:
@@ -171,9 +154,7 @@ DeclarationList:
     ;
 
 AssignExpression:
-      Identifier '=' Expression {
-        printf("AssignExpression:\n");
-      }
+      Identifier '=' Expression
     ;
 
 AssignmentStatement:
