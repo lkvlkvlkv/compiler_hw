@@ -19,5 +19,5 @@ TOKEN: '='
 TOKEN: FLOAT 1.5
 Numeric: 1.500000
 TOKEN: IDENTIFIER b
-Error: syntax error, unexpected IDENTIFIER, expecting ';' at line 9, column 13...13, near 'b'
+Error: syntax error, unexpected IDENTIFIER, expecting ';' at line 5, column 13...13, near 'b'
 

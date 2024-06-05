@@ -212,5 +212,5 @@ TOKEN: '('
 TOKEN: IDENTIFIER c
 Identifier: c
 TOKEN: INT 0
-Error: syntax error, unexpected INT at line 77, column 15...15, near '0'
+Error: syntax error, unexpected INT at line 41, column 15...15, near '0'
 

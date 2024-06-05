@@ -145,11 +145,24 @@ Identifier: b
 TOKEN: ';'
 TOKEN: '}'
 TOKEN: KW_ELSE
-TOKEN: IDENTIFIER f
-Identifier: f
+TOKEN: KW_IF
 TOKEN: '('
 TOKEN: IDENTIFIER a
 Identifier: a
 TOKEN: '>'
-Error: syntax error, unexpected '>', expecting ')' or ',' at line 49, column 15...15, near '>'
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ')'
+TOKEN: '{'
+TOKEN: IDENTIFIER c
+Identifier: c
+TOKEN: '='
+TOKEN: IDENTIFIER a
+Identifier: a
+TOKEN: '-'
+TOKEN: IDENTIFIER b
+Identifier: b
+TOKEN: ';'
+TOKEN: KW_ELSE
+Error: syntax error, unexpected KW_ELSE at line 30, column 5...8, near 'else'
 

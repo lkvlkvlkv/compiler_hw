@@ -115,5 +115,5 @@ TOKEN: '*'
 TOKEN: INT 2
 Numeric: 2
 TOKEN: IDENTIFIER testFunction
-Error: syntax error, unexpected IDENTIFIER, expecting ';' at line 39, column 22...33, near 'testFunction'
+Error: syntax error, unexpected IDENTIFIER, expecting ';' at line 22, column 22...33, near 'testFunction'
 

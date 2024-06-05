@@ -274,5 +274,5 @@ Identifier: y
 TOKEN: ';'
 TOKEN: '}'
 TOKEN: ';'
-Error: syntax error, unexpected ';', expecting KW_WHILE at line 97, column 6...6, near ';'
+Error: syntax error, unexpected ';', expecting KW_WHILE at line 51, column 6...6, near ';'
 

@@ -76,5 +76,5 @@ TOKEN: KW_INT
 TOKEN: IDENTIFIER z
 Identifier: z
 TOKEN: IDENTIFIER testFunction
-Error: syntax error, unexpected IDENTIFIER, expecting ';' at line 31, column 12...23, near 'testFunction'
+Error: syntax error, unexpected IDENTIFIER, expecting ';' at line 18, column 12...23, near 'testFunction'
 

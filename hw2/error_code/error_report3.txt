@@ -33,5 +33,5 @@ TOKEN: KW_INT
 TOKEN: IDENTIFIER a
 TOKEN: ','
 TOKEN: IDENTIFIER in
-Error: syntax error, unexpected IDENTIFIER, expecting KW_VOID or KW_INT or KW_FLOAT at line 12, column 26...27, near 'in'
+Error: syntax error, unexpected IDENTIFIER, expecting KW_VOID or KW_INT or KW_FLOAT at line 7, column 26...27, near 'in'
 

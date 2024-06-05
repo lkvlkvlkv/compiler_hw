@@ -236,5 +236,5 @@ TOKEN: INT 0
 Numeric: 0
 TOKEN: ';'
 TOKEN: ';'
-Error: syntax error, unexpected ';', expecting INT or FLOAT or IDENTIFIER or '(' at line 85, column 20...20, near ';'
+Error: syntax error, unexpected ';', expecting INT or FLOAT or IDENTIFIER or '(' at line 45, column 20...20, near ';'
 

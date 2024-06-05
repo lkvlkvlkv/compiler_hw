@@ -314,5 +314,5 @@ TOKEN: KW_INT
 TOKEN: IDENTIFIER b
 TOKEN: ')'
 TOKEN: KW_INT
-Error: syntax error, unexpected KW_INT, expecting ';' or '{' at line 113, column 5...7, near 'int'
+Error: syntax error, unexpected KW_INT, expecting ';' or '{' at line 59, column 5...7, near 'int'
 
