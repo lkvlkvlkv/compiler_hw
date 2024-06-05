@@ -5,10 +5,13 @@
 
 void yyerror(const char *s);
 int yylex(void);
-extern int yylineno;
+extern int yylineno; // 定義行號變量
+extern int yycolumn; // 定義列號變量
+extern char* yytext; // 定義文本指針
 
 %}
 
+%locations
 %union {
     int intval;
     double doubleval;
@@ -246,9 +249,8 @@ type:
 %%  
 
 void yyerror(const char *s) {
-    extern int yylineno; // 獲取當前行號
-    fprintf(stderr, "error: %s in line: %d\n", s, yylineno);
-    exit(1); // 偵測到第一個錯誤後退出
+    fprintf(stderr, "Error: %s at line %d, column %d, near '%s'\n", s, yylloc.first_line, yylloc.first_column, yytext);
+    exit(1);
 }
 
 int main() {
