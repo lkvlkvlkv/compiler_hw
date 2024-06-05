@@ -15,6 +15,8 @@ int main() {
     multiline comment
     */
 
+    int z = testFunction(1, 2);
+
     a = 5;
     b = a + 10;
     c = b * 2;

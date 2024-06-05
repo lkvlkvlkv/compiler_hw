@@ -77,8 +77,14 @@ FunctionStatement:
     ;
 
 FunctionCallStatement:
-      Identifier '(' ParameterList ')' ';'{
+      FunctionCallExpression ';'{
         printf("FunctionCallStatement:\n");
+      }
+    ;
+
+FunctionCallExpression:
+      Identifier '(' ParameterList ')' {
+        printf("FunctionCallExpression:\n");
       }
     ;
 
@@ -225,6 +231,7 @@ Factor:
       Identifier
     | Numeric
     | '(' Expression ')'
+    | FunctionCallExpression
     ;
 
 Identifier:
