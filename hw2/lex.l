@@ -69,7 +69,7 @@ extern char* yytext; // 定義文本指針
 "\""            { printf("TOKEN: '\"'\n"); return '"'; }
 
 [ \t\r]+        { ; }
-\n              { yycolumn = 1; yylineno++; }
+\n              { yycolumn = 1; }
 
 .               { fprintf(stderr, "unknown token: %s\n", yytext); }
 
