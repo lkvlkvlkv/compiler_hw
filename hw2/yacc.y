@@ -24,7 +24,7 @@ extern char* yytext; // 定義文本指針
 %token <doubleval> FLOAT
 %token <strval> IDENTIFIER
 
-%token <strval> KW_VOID KW_INT KW_DOUBLE KW_FLOAT KW_CHAR
+%token <strval> KW_VOID KW_INT KW_FLOAT
 %token <strval> KW_IF KW_ELSE KW_WHILE KW_FOR KW_DO KW_RETURN
 %token <strval> KW_BREAK KW_CONTINUE
 %token <strval> KW_INCLUDE HEADER_FILE_END
@@ -240,9 +240,7 @@ Numeric:
 
 type:
       KW_INT
-    | KW_DOUBLE
     | KW_FLOAT
-    | KW_CHAR
     | KW_VOID
     ;
 

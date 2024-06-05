@@ -24,14 +24,12 @@ extern int yylineno; // 添加這行以確保 yylineno 被定義
 <MULTI_COMMENT>\*+\/ { BEGIN 0; }
 
 "int"           { printf("TOKEN: KW_INT\n"); return KW_INT; }
-"double"        { printf("TOKEN: KW_DOUBLE\n"); return KW_DOUBLE; }
 "float"         { printf("TOKEN: KW_FLOAT\n"); return KW_FLOAT; }
 "if"            { printf("TOKEN: KW_IF\n"); return KW_IF; }
 "else"          { printf("TOKEN: KW_ELSE\n"); return KW_ELSE; }
 "while"         { printf("TOKEN: KW_WHILE\n"); return KW_WHILE; }
 "for"           { printf("TOKEN: KW_FOR\n"); return KW_FOR; }
 "break"         { printf("TOKEN: KW_BREAK\n"); return KW_BREAK; }
-"char"          { printf("TOKEN: KW_CHAR\n"); return KW_CHAR; }
 "continue"      { printf("TOKEN: KW_CONTINUE\n"); return KW_CONTINUE; }
 "do"            { printf("TOKEN: KW_DO\n"); return KW_DO; }
 "return"        { printf("TOKEN: KW_RETURN\n"); return KW_RETURN; }
