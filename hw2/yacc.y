@@ -48,7 +48,7 @@ GlobalStatement:
       IncludeStatement
     | FunctionDeclaration
     | FunctionDefinition
-    | Statement
+    | DeclarationStatement
     ;
 
 FunctionDeclaration:
