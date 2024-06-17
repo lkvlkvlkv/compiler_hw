@@ -47,7 +47,7 @@ int yycolumn = 1;
 "void"          { std::cout << "TOKEN: KW_VOID\n";     return KW_VOID; }
 
 [0-9]+                   { yylval.intval = atoi(yytext);     std::cout << "TOKEN: INT " << yytext << "\n";          return NUMBER; }
-[0-9]+"."[0-9]*          { yylval.doubleval = atof(yytext);  std::cout << "TOKEN: FLOAT " << yytext << "\n";        return FRAC_NUMBER; }
+[0-9]+"."[0-9]*          { yylval.floatval = atof(yytext);  std::cout << "TOKEN: FLOAT " << yytext << "\n";        return FRAC_NUMBER; }
 [A-Za-z_][A-Za-z0-9_]*   { yylval.strval = strdup(yytext);   std::cout << "TOKEN: IDENTIFIER " << yytext << "\n";   return IDENTIFIER; }
 [A-Za-z_][A-Za-z0-9_]*.h { yylval.strval = strdup(yytext);   std::cout << "HEADER FILE " << yytext << "\n";        return HEADER_FILE; }
 
@@ -78,6 +78,6 @@ int yycolumn = 1;
 [ \t\r]+        { ; }
 \n              { yycolumn = 1; }
 
-.               { fprintf(stderr, "unknown token: %s\n", yytext); }
+.               { std::cout << "unknown token: " << yytext << "\n"; }
 
 %%

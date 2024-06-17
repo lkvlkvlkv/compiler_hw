@@ -30,7 +30,6 @@ extern char* yytext;
 %token <strval> KW_IF KW_ELSE KW_WHILE KW_FOR KW_DO KW_RETURN
 %token <strval> KW_BREAK KW_CONTINUE
 %token <strval> KW_INCLUDE
-%token 
 
 %token <strval> COM_EQ COM_NE COM_LE COM_GE COM_LT COM_GT
 %token <strval> OP_ASSIGN OP_PLUS OP_MINUS OP_MULT OP_DIV
@@ -254,8 +253,7 @@ type:
 %%  
 
 void yyerror(const char *s) {
-    printf("Error: %s at line %d, column %d...%d, near '%s'\n\n", s, yylineno, yylloc.first_column, yylloc.last_column, yytext);
-    fprintf(stderr, "Error: %s at line %d, column %d...%d, near '%s'\n\n", s, yylineno, yylloc.first_column, yylloc.last_column, yytext);
+    std::cout << "Error: " << s << " at line " << yylineno << ", column " << yylloc.first_column << "..." << yylloc.last_column << ", near '" << yytext << "'\n\n";
     return;
 }
 
