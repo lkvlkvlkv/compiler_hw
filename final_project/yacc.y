@@ -16,26 +16,22 @@ extern char* yytext;
 %locations
 
 %union {
-    int intval;
-    float floatval;
-    char *strval;
+    int token;
+    std::string* string;
 }
 
-%token <intval>   NUMBER
-%token <floatval> FRAC_NUMBER
-%token <strval>   IDENTIFIER
-%token <strval>   HEADER_FILE
+%token <string>   NUMBER FRAC_NUMBER IDENTIFIER HEADER_FILE
 
-%token <strval> KW_VOID KW_INT KW_FLOAT
-%token <strval> KW_IF KW_ELSE KW_WHILE KW_FOR KW_DO KW_RETURN
-%token <strval> KW_BREAK KW_CONTINUE
-%token <strval> KW_INCLUDE
+%token <token> KW_VOID KW_INT KW_FLOAT
+%token <token> KW_IF KW_ELSE KW_WHILE KW_FOR KW_DO KW_RETURN
+%token <token> KW_BREAK KW_CONTINUE
+%token <token> KW_INCLUDE
 
-%token <strval> COM_EQ COM_NE COM_LE COM_GE COM_LT COM_GT
-%token <strval> OP_ASSIGN OP_PLUS OP_MINUS OP_MULT OP_DIV
-%token <strval> LPAREN RPAREN LBRACE RBRACE
-%token <strval> SEMICOLON COMMA
-%token <strval> HASH QUOTE
+%token <token> COM_EQ COM_NE COM_LE COM_GE COM_LT COM_GT
+%token <token> OP_ASSIGN OP_PLUS OP_MINUS OP_MULT OP_DIV
+%token <token> LPAREN RPAREN LBRACE RBRACE
+%token <token> SEMICOLON COMMA
+%token <token> HASH QUOTE
 
 %start Program
 
@@ -143,8 +139,13 @@ IncludeStatement:
     ;
   
 HEADEREXPRESSION:
-      COM_LT HEADER_FILE COM_GT
-      | QUOTE HEADER_FILE QUOTE
+      COM_LT HEADER_FILE COM_GT {
+        std::cout << "HEADEREXPRESSION: " << *($2) << "\n";
+      }
+      | QUOTE HEADER_FILE QUOTE {
+        std::cout << "HEADEREXPRESSION: " << *($2) << "\n";
+      
+      }
 
 DeclarationExpression:
       type DeclarationList
@@ -231,16 +232,16 @@ Factor:
 
 Identifier:
       IDENTIFIER {
-        printf("Identifier: %s\n", $1);
+        std::cout << "Identifier: " << *($1) << "\n";
       }
     ;
 
 Numeric:
       NUMBER {
-        printf("Numeric: %d\n", $1);
+        std::cout << "Numeric(NUMBER): " << *($1) << "\n";
       }
     | FRAC_NUMBER {
-        printf("Numeric: %f\n", $1);
+        std::cout << "Numeric(FRAC_NUMBER): " << *($1) << "\n";
       }
     ;
 
