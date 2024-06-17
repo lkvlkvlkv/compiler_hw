@@ -6,13 +6,15 @@
 
 void yyerror(const char *s);
 int yylex(void);
-extern int yylineno; // 定義行號變量
-extern int yycolumn; // 定義列號變量
-extern char* yytext; // 定義文本指針
+
+extern int yylineno;
+extern int yycolumn;
+extern char* yytext;
 
 %}
 
 %locations
+
 %union {
     int intval;
     float floatval;
@@ -35,8 +37,6 @@ extern char* yytext; // 定義文本指針
 %token <strval> LPAREN RPAREN LBRACE RBRACE
 %token <strval> SEMICOLON COMMA
 %token <strval> HASH QUOTE
-
-
 
 %start Program
 

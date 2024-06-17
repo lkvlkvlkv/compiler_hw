@@ -3,16 +3,17 @@
 #include <iostream>
 #include "yacc.tab.h"
 
-extern int yylineno;
-extern char* yytext;
-int yycolumn = 1;
-
 #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno; \
     yylloc.first_column = yycolumn; yylloc.last_column = yycolumn+yyleng-1; \
     yycolumn += yyleng;
 
 #define SAVE_TOKEN yylval.string = new std::string(yytext, yyleng)
 #define TOKEN(t) (yylval.token = t)
+
+extern int yylineno;
+extern char* yytext;
+int yycolumn = 1;
+
 %}
 
 %x COMMENT
