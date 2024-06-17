@@ -22,7 +22,7 @@ clean:
 		-rm *.o lex.yy.c yacc.tab.h yacc.tab.c parser.exe
 
 run:
-		./$(OBJECT).exe < source_code.c
+		./$(OBJECT).exe < correct_code.c
 
 run_error:
 		- ./$(OBJECT).exe < "./error_code/error_code1.c" > "./error_code/error_report1.txt"
