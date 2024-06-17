@@ -1,11 +1,11 @@
 %{
-#include "yacc.tab.h" // Bison 生成的頭文件，用於 token 定義
+#include "yacc.tab.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h> // 添加這行以解決 strdup 警告
-extern int yylineno; // 添加這行以確保 yylineno 被定義
-int yycolumn = 1; // 添加這行以確保 yycolumn 被定義
-extern char* yytext; // 定義文本指針
+#include <string.h>
+extern int yylineno;
+int yycolumn = 1;
+extern char* yytext;
 #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno; \
     yylloc.first_column = yycolumn; yylloc.last_column = yycolumn+yyleng-1; \
     yycolumn += yyleng;

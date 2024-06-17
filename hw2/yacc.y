@@ -7,9 +7,9 @@
 
 void yyerror(const char *s);
 int yylex(void);
-extern int yylineno; // 定義行號變量
-extern int yycolumn; // 定義列號變量
-extern char* yytext; // 定義文本指針
+extern int yylineno;
+extern int yycolumn;
+extern char* yytext;
 
 %}
 
