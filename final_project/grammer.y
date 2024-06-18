@@ -1,254 +1,292 @@
 %{
 #include <string>
 #include <iostream>
+#include <vector>
+#include "node.hpp"
 
 #define YYERROR_VERBOSE 1
 
 void yyerror(const char *s);
-int yylex(void);
+extern yylex(void);
 
 extern int yylineno;
 extern int yycolumn;
 extern char* yytext;
+NBlock* programBlock;
 
 %}
 
 %locations
 
 %union {
+    NBlock *block;
+    NExpression *expr;
+    NStatement *stmt;
+    NIdentifier *identifier;
+    NVariableDeclaration *var_decl;
+    std::vector<std::shared_ptr<NVariableDeclaration>> *varvec;
+    std::vector<std::shared_ptr<NExpression>> *exprvec;
+    std::string *string;
     int token;
-    std::string* string;
 }
 
-%token <string>   NUMBER FRAC_NUMBER IDENTIFIER HEADER_FILE
+%token <string> NUMBER FRAC_NUMBER IDENTIFIER
 
-%token <token> KW_VOID KW_INT KW_FLOAT
+%token <string> KW_VOID KW_INT KW_FLOAT
+
 %token <token> KW_IF KW_ELSE KW_WHILE KW_FOR KW_DO KW_RETURN
 %token <token> KW_BREAK KW_CONTINUE
-%token <token> KW_INCLUDE
 
 %token <token> COM_EQ COM_NE COM_LE COM_GE COM_LT COM_GT
 %token <token> OP_ASSIGN OP_PLUS OP_MINUS OP_MULT OP_DIV
 %token <token> LPAREN RPAREN LBRACE RBRACE
 %token <token> SEMICOLON COMMA
-%token <token> HASH QUOTE
+
+%type <block> Program GlobalStatements FunctionBlock FunctionStatements
+%type <stmt> Statement GlobalStatement FunctionDeclaration FunctionDefinition FunctionStatement FPDeclaration
+%type <expr> Condition Expression Term Factor Numeric AssignExpression DeclarationExpression FunctionCallExpression
+%type <varvec> DeclarationList FPDeclarationList
+%type <exprvec> FCParameterList
+%type <identifier> type Identifier
 
 %start Program
 
 %%
 
 Program:
-      GlobalStatements
+      GlobalStatements {
+        programBlock = $1;
+      }
     ;
 
 GlobalStatements:
-      /* empty */
-    | GlobalStatements GlobalStatement
+      GlobalStatement {
+        $$ = new NBlock();
+        $$->statements.push_back($1);
+      }
+    | GlobalStatements GlobalStatement {
+        $1->statements.push_back($2);
+      } 
     ;
 
 GlobalStatement:
-      IncludeStatement
-    | FunctionDeclaration
+      FunctionDeclaration SEMICOLON {
+        $$ = $1;
+      }
     | FunctionDefinition
-    | DeclarationStatement
+    | DeclarationExpression SEMICOLON {
+        $$ = new NExpressionStatement(std::shared_ptr<NExpression>($1));
+      }
     ;
 
 FunctionDeclaration:
-      type Identifier LPAREN ParameterDeclarationList RPAREN SEMICOLON 
+      type Identifier LPAREN FPDeclarationList RPAREN {
+        $$ = new NFunctionDeclaration(std::shared_ptr<NIdentifier>($2), std::shared_ptr<NIdentifier>($1), std::vector<std::shared_ptr<NVariableDeclaration>>(*$4));
+      }
     ;
 
 FunctionDefinition:
-      type Identifier LPAREN ParameterDeclarationList RPAREN FunctionBlock 
+      FunctionDeclaration FunctionBlock  {
+        $$ = new NFunctionDefinition(std::shared_ptr<NFunctionDeclaration>(dynamic_cast<NFunctionDeclaration*>($1)), std::shared_ptr<NBlock>($2));
+      }
+    ;
+
+FPDeclarationList:
+      /* empty */ {
+        $$ = new std::vector<std::shared_ptr<NVariableDeclaration>>();
+      }
+    | FPDeclarationList COMMA FPDeclaration {
+        $1->push_back(std::shared_ptr<NVariableDeclaration>(dynamic_cast<NVariableDeclaration*>($3)));
+      }
+    | FPDeclaration {
+        $$ = new std::vector<std::shared_ptr<NVariableDeclaration>>();
+        $$->push_back(std::shared_ptr<NVariableDeclaration>(dynamic_cast<NVariableDeclaration*>($1)));
+      }
+    ;
+
+FPDeclaration:
+      type Identifier {
+        $$ = new NVariableDeclaration(std::shared_ptr<NIdentifier>($1), std::shared_ptr<NIdentifier>($2), nullptr);
+      }
     ;
 
 FunctionBlock:
-      LBRACE FunctionStatements RBRACE
+      LBRACE FunctionStatements RBRACE {
+        $$ = $2;
+      }
     ;
 
 FunctionStatements:
-      /* empty */
-    | FunctionStatements FunctionStatement
+      FunctionStatement {
+        $$ = new NBlock();
+        $$->statements.push_back($1);
+      }
+    | FunctionStatements FunctionStatement {
+        $1->statements.push_back($2);
+      }
     ;
 
 FunctionStatement:
       Statement
-    | KW_RETURN Expression SEMICOLON
-    | KW_RETURN SEMICOLON
-    ;
-
-FunctionCallStatement:
-      FunctionCallExpression SEMICOLON
+    | KW_RETURN Expression SEMICOLON {
+        $$ = new NReturnStatement(std::shared_ptr<NExpression>($2));
+      }
+    | KW_RETURN SEMICOLON {
+        $$ = new NReturnStatement();
+      }
     ;
 
 FunctionCallExpression:
-      Identifier LPAREN ParameterList RPAREN
+      Identifier LPAREN FCParameterList RPAREN {
+        std::cout << (*$3).size() << std::endl;
+        $$ = new NFunctionCall(std::shared_ptr<NIdentifier>($1), std::vector<std::shared_ptr<NExpression>>(*$3));
+      }
     ;
 
-ParameterList:
-      /* empty */
-    | ParameterList COMMA Parameter
-    | Parameter
+FCParameterList:
+      /* empty */ {
+        $$ = new std::vector<std::shared_ptr<NExpression>>();
+      }
+    | FCParameterList COMMA Expression {
+        $1->push_back(std::shared_ptr<NExpression>($3));
+      }
+    | Expression {
+        $$ = new std::vector<std::shared_ptr<NExpression>>();
+        $$->push_back(std::shared_ptr<NExpression>($1));
+      }
     ;
 
-Parameter:
-      Expression
-    ;
-
-ParameterDeclarationList:
-      /* empty */
-    | ParameterDeclarationList COMMA ParameterDeclaration
-    | ParameterDeclaration
-    ;
-
-ParameterDeclaration:
-      type IDENTIFIER
-    ;
-
-ForBlock:
-      ForBlockStatement
-    | LBRACE ForBlockStatements RBRACE
-    ;
-
-ForBlockStatements:
-      /* empty */
-    | ForBlockStatements ForBlockStatement
-    ;
-
-ForBlockStatement:
-      Statement
-    | KW_CONTINUE SEMICOLON
-    | KW_BREAK SEMICOLON
-    | KW_RETURN Expression SEMICOLON
-    ;
 
 Statement:
-      AssignmentStatement
-    | DeclarationStatement
-    | IfStatement
-    | WhileStatement
-    | ForStatement
-    | DoWhileStatement
-    | FunctionCallStatement
-    ;
-
-DoWhileStatement:
-      KW_DO Block KW_WHILE LPAREN Condition RPAREN SEMICOLON
-
-IncludeStatement:
-      HASH KW_INCLUDE HEADEREXPRESSION
-    ;
-  
-HEADEREXPRESSION:
-      COM_LT HEADER_FILE COM_GT {
-        std::cout << "HEADEREXPRESSION: " << *($2) << "\n";
+      DeclarationExpression SEMICOLON {
+        $$ = new NExpressionStatement(std::shared_ptr<NExpression>($1));
       }
-      | QUOTE HEADER_FILE QUOTE {
-        std::cout << "HEADEREXPRESSION: " << *($2) << "\n";
-      
+    | AssignExpression SEMICOLON {
+        $$ = new NExpressionStatement(std::shared_ptr<NExpression>($1));
       }
+    | FunctionCallExpression SEMICOLON {
+        $$ = new NExpressionStatement(std::shared_ptr<NExpression>($1));
+      }
+    ;
 
 DeclarationExpression:
-      type DeclarationList
-    ;
-
-DeclarationStatement:
-      DeclarationExpression SEMICOLON
+      type DeclarationList {
+        std::vector<std::shared_ptr<NVariableDeclaration>> *varList = $2;
+        for (auto it = varList->begin(); it != varList->end(); it++) {
+            (*it)->type = std::shared_ptr<NIdentifier>($1);
+        }
+      }
     ;
 
 DeclarationList:
-      DeclarationList COMMA Identifier
-    | DeclarationList COMMA AssignExpression
-    | AssignExpression
-    | Identifier
+      DeclarationList COMMA Identifier {
+        $1->push_back(std::make_shared<NVariableDeclaration>(nullptr, std::shared_ptr<NIdentifier>($3), nullptr));
+      }
+    | DeclarationList COMMA AssignExpression {
+        $1->push_back(std::make_shared<NVariableDeclaration>(nullptr, std::shared_ptr<NAssignment>(dynamic_cast<NAssignment*>($3))));
+      }
+    | AssignExpression {
+        $$ = new std::vector<std::shared_ptr<NVariableDeclaration>>();
+        $$->push_back(std::make_shared<NVariableDeclaration>(nullptr, std::shared_ptr<NAssignment>(dynamic_cast<NAssignment*>($1))));
+      }
+    | Identifier {
+        $$ = new std::vector<std::shared_ptr<NVariableDeclaration>>();
+        $$->push_back(std::make_shared<NVariableDeclaration>(nullptr, std::shared_ptr<NIdentifier>($1), nullptr));
+      }
     ;
 
 AssignExpression:
-      Identifier OP_ASSIGN Expression
-    ;
-
-AssignmentStatement:
-      AssignExpression SEMICOLON
-    ;
-
-IfStatement:
-      KW_IF LPAREN Condition RPAREN Block
-    | KW_IF LPAREN Condition RPAREN Block KW_ELSE Block
-    ;
-
-Block:
-      Statement
-    | BlockWithBrace
-    ;
-
-BlockWithBrace:
-      LBRACE Statements RBRACE
-    ;
-
-Statements:
-      /* empty */
-    | Statements Statement
-    ;
-
-WhileStatement:
-      KW_WHILE LPAREN Condition RPAREN Block
-    ;
-
-ForStatement:
-      KW_FOR LPAREN ForInitExpression SEMICOLON Condition SEMICOLON AssignExpression RPAREN ForBlock
-    ;
-
-ForInitExpression:
-      DeclarationExpression
-    | AssignExpression
+      Identifier OP_ASSIGN Expression {
+        $$ = new NAssignment(std::shared_ptr<NIdentifier>($1), std::shared_ptr<NExpression>($3));
+      }
     ;
 
 Condition:
-      Expression COM_LT  Expression
-    | Expression COM_GT  Expression
-    | Expression COM_EQ   Expression
-    | Expression COM_LE   Expression
-    | Expression COM_GE   Expression
-    | Expression COM_NE   Expression
+      Expression COM_LT Expression {
+        $$ = new NBinaryOperator(std::shared_ptr<NExpression>($1), $2, std::shared_ptr<NExpression>($3));
+      }
+    | Expression COM_GT Expression {
+        $$ = new NBinaryOperator(std::shared_ptr<NExpression>($1), $2, std::shared_ptr<NExpression>($3));
+      }
+    | Expression COM_EQ Expression {
+        $$ = new NBinaryOperator(std::shared_ptr<NExpression>($1), $2, std::shared_ptr<NExpression>($3));
+      }
+    | Expression COM_LE Expression {
+        $$ = new NBinaryOperator(std::shared_ptr<NExpression>($1), $2, std::shared_ptr<NExpression>($3));
+      }
+    | Expression COM_GE Expression {
+        $$ = new NBinaryOperator(std::shared_ptr<NExpression>($1), $2, std::shared_ptr<NExpression>($3));
+      }
+    | Expression COM_NE Expression {
+        $$ = new NBinaryOperator(std::shared_ptr<NExpression>($1), $2, std::shared_ptr<NExpression>($3));
+      }
     ;
 
 Expression:
-      Term
-    | Expression OP_PLUS Term
-    | Expression OP_MINUS Term
+      Term {
+        $$ = $1;
+      }
+    | Expression OP_PLUS Term {
+        $$ = new NBinaryOperator(std::shared_ptr<NExpression>($1), $2, std::shared_ptr<NExpression>($3));
+      }
+    | Expression OP_MINUS Term {
+        $$ = new NBinaryOperator(std::shared_ptr<NExpression>($1), $2, std::shared_ptr<NExpression>($3));
+      }
     ;
 
 Term:
-      Factor
-    | Term OP_MULT Factor
-    | Term OP_DIV Factor
+      Factor {
+        $$ = $1;
+      }
+    | Term OP_MULT Factor {
+        $$ = new NBinaryOperator(std::shared_ptr<NExpression>($1), $2, std::shared_ptr<NExpression>($3));
+      }
+    | Term OP_DIV Factor {
+        $$ = new NBinaryOperator(std::shared_ptr<NExpression>($1), $2, std::shared_ptr<NExpression>($3));
+      }
     ;
 
 Factor:
-      Identifier
-    | Numeric
-    | LPAREN Expression RPAREN
-    | FunctionCallExpression
+      Identifier {
+        $$ = $1;
+      }
+    | Numeric {
+        $$ = $1;
+      }
+    | LPAREN Expression RPAREN {
+        $$ = $2;
+      }
+    | FunctionCallExpression {
+        $$ = $1;
+      }
     ;
 
 Identifier:
       IDENTIFIER {
-        std::cout << "Identifier: " << *($1) << "\n";
+        $$ = new NIdentifier(*($1));
+        delete $1;
       }
     ;
 
 Numeric:
       NUMBER {
-        std::cout << "Numeric(NUMBER): " << *($1) << "\n";
+        $$ = new NInteger(atol($1->c_str()));
       }
     | FRAC_NUMBER {
-        std::cout << "Numeric(FRAC_NUMBER): " << *($1) << "\n";
+        $$ = new NDouble(atof($1->c_str()));
       }
     ;
 
 type:
-      KW_INT
-    | KW_FLOAT
-    | KW_VOID
+      KW_INT {
+        $$ = new NIdentifier(*$1);
+      }
+    | KW_FLOAT {
+        $$ = new NIdentifier(*$1);
+      }
+    | KW_VOID {
+        $$ = new NIdentifier(*$1);
+      }
     ;
 
 %%  
@@ -256,8 +294,4 @@ type:
 void yyerror(const char *s) {
     std::cout << "Error: " << s << " at line " << yylineno << ", column " << yylloc.first_column << "..." << yylloc.last_column << ", near '" << yytext << "'\n\n";
     return;
-}
-
-int main() {
-    return yyparse();
 }

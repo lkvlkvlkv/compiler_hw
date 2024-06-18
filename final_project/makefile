@@ -1,37 +1,37 @@
-LEX=flex
-YACC=bison
-CC=g++
-OBJECT=parser
+all: compiler
 
-$(OBJECT): lex.yy.o yacc.tab.o
-		$(CC) lex.yy.o yacc.tab.o -o $(OBJECT)
+OBJS = grammer.o \
+		token.o  \
+		codeGen.o \
+		main.o	 \
+		objGen.o \
 
-lex.yy.o: lex.yy.c yacc.tab.h
-		$(CC) -c lex.yy.c
+LLVMCONFIG = llvm-config
+INCLUDEDIR = `$(LLVMCONFIG) --includedir`
+CFLAGS = `$(LLVMCONFIG) --cppflags` -std=c++17
+LDFLAGS = `$(LLVMCONFIG) --ldflags`
+LIBS = `$(LLVMCONFIG) --libs`
 
-yacc.tab.o: yacc.tab.c
-		$(CC) -c yacc.tab.c
+compiler: $(OBJS)
+		g++ -I $(INCLUDEDIR) $(OBJS) -o $@ $(LIBS) $(LDFLAGS) $(CFLAGS)
 
-yacc.tab.c yacc.tab.h: yacc.y
-		$(YACC) -d yacc.y
+%.o: %.cpp
+		g++ -I $(INCLUDEDIR) -c $< $(LIBS) $(LDFLAGS) $(CFLAGS)
 
-lex.yy.c: lex.l
-		$(LEX) lex.l
+token.o: token.cpp grammer.hpp
+		g++ -I $(INCLUDEDIR) -c token.cpp $(LIBS) $(LDFLAGS) $(CFLAGS)
+
+grammer.o: grammer.cpp
+		g++ -I $(INCLUDEDIR) -c grammer.cpp $(LIBS) $(LDFLAGS) $(CFLAGS)
+
+grammer.cpp grammer.hpp: grammer.y
+		bison -d grammer.y -o grammer.cpp
+
+token.cpp: token.l
+		flex token.l
 
 clean:
-		-rm *.o lex.yy.c yacc.tab.h yacc.tab.c parser.exe
+		-rm *.o token.cpp grammer.hpp grammer.cpp compiler.exe
 
 run:
-		./$(OBJECT).exe < correct_code.c
-
-run_error:
-		- ./$(OBJECT).exe < "./error_code/error_code1.c" > "./error_code/error_report1.txt"
-		- ./$(OBJECT).exe < "./error_code/error_code2.c" > "./error_code/error_report2.txt"
-		- ./$(OBJECT).exe < "./error_code/error_code3.c" > "./error_code/error_report3.txt"
-		- ./$(OBJECT).exe < "./error_code/error_code4.c" > "./error_code/error_report4.txt"
-		- ./$(OBJECT).exe < "./error_code/error_code5.c" > "./error_code/error_report5.txt"
-		- ./$(OBJECT).exe < "./error_code/error_code6.c" > "./error_code/error_report6.txt"
-		- ./$(OBJECT).exe < "./error_code/error_code7.c" > "./error_code/error_report7.txt"
-		- ./$(OBJECT).exe < "./error_code/error_code8.c" > "./error_code/error_report8.txt"
-		- ./$(OBJECT).exe < "./error_code/error_code9.c" > "./error_code/error_report9.txt"
-		- ./$(OBJECT).exe < "./error_code/error_code10.c" > "./error_code/error_report10.txt"
+		./compiler.exe < correct_code.c
