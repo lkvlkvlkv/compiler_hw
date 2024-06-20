@@ -4,7 +4,7 @@ int testFunction(int a, int b);
 void nothing();
 
 int main() {
-    int a = 1.5, b, c;  // local
+    int a = 1.5, b;  // local
     float z;
     float x = 3.14, y = 2.71;
 
@@ -18,22 +18,22 @@ int main() {
     b = a + 10;
     c = (a + b) * 2 / testFunction(1, 2);
 
-    // if (a == b) {
-    //     c = a + b;
-    // }
-    // else if (a > b) {
-    //     c = a - b;
-    // }
-    // else {
-    //     c = a * b;
-    // }
+    if (a == b) {
+        c = a + b;
+    }
+    else if (a > b) {
+        c = a - b;
+    }
+    else {
+        c = a * b; // c = 75
+    }
 
-    // if (a < b) {
-    //     c = a + 3;
-    // }
-    // else {
-    //     c = a - b;
-    // }
+    if (a < b) {
+        c = a + 3; // c = 8
+    }
+    else {
+        c = a - b;
+    }
 
     // while (c > 0) {
     //     c = c - 1;

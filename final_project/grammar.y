@@ -44,8 +44,8 @@ NProgram* programBlock;
 
 %type <program> Program
 %type <stmtvec> GlobalStatements
-%type <block> FunctionBlock FunctionStatements
-%type <stmt> Statement GlobalStatement FunctionDeclaration FunctionDefinition FunctionStatement
+%type <block> FunctionBlock FunctionStatements Block Statements
+%type <stmt> Statement GlobalStatement FunctionDeclaration FunctionDefinition FunctionStatement IfStatement
 %type <expr> Condition Expression Term Factor Numeric AssignExpression FunctionCallExpression DeclarationExpression FPDeclaration
 %type <varvec> DeclarationList FPDeclarationList
 %type <exprvec> FCParameterList
@@ -171,6 +171,37 @@ Statement:
       }
     | FunctionCallExpression SEMICOLON {
         $$ = new NExpressionStatement(std::shared_ptr<NExpression>($1));
+      }
+    | IfStatement {
+        $$ = $1;
+      }
+    ;
+
+IfStatement:
+      KW_IF LPAREN Condition RPAREN Block {
+        $$ = new NIfStatement(std::shared_ptr<NExpression>($3), std::shared_ptr<NBlock>($5));
+      }
+    | KW_IF LPAREN Condition RPAREN Block KW_ELSE Block {
+        $$ = new NIfStatement(std::shared_ptr<NExpression>($3), std::shared_ptr<NBlock>($5), std::shared_ptr<NBlock>($7));
+      }
+    ;
+
+Block:
+      Statement {
+        $$ = new NBlock();
+        $$->statements.push_back($1);
+      }
+    | LBRACE Statements RBRACE {
+        $$ = $2;
+      }
+    ;
+
+Statements:
+      /* empty */ {
+        $$ = new NBlock();
+      }
+    | Statements Statement {
+        $1->statements.push_back($2);
       }
     ;
 

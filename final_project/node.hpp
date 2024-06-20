@@ -165,3 +165,13 @@ public:
     virtual llvm::Value* codeGen(CodeGenContext& context) override;
     virtual std::string getType() override { return "NFunctionCall"; }
 };
+
+class NIfStatement : public NStatement {
+public:
+    std::shared_ptr<NExpression> condition;
+    std::shared_ptr<NBlock> thenBlock;
+    std::shared_ptr<NBlock> elseBlock;
+
+    NIfStatement(std::shared_ptr<NExpression> condition, std::shared_ptr<NBlock> thenBlock, std::shared_ptr<NBlock> elseBlock = nullptr) : condition(condition), thenBlock(thenBlock), elseBlock(elseBlock) {}
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+};

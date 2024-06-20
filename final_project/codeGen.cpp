@@ -4,6 +4,7 @@
 #include <llvm/IR/LegacyPassManager.h>
 #include <llvm/IR/Value.h>
 #include <llvm/IR/Verifier.h>
+#include <llvm/IR/Function.h>
 
 #include <iostream>
 #include <vector>
@@ -258,6 +259,58 @@ llvm::Value* NFunctionCall::codeGen(CodeGenContext& context) {
     }
 
     return context.builder.CreateCall(function, args, "calltmp");
+}
+
+llvm::Value* NIfStatement::codeGen(CodeGenContext& context) {
+    std::cout << "Creating if statement\n";
+    llvm::Value* conditionValue = condition->codeGen(context);
+    if (!conditionValue) {
+        return nullptr;
+    }
+
+    llvm::Function* function = context.builder.GetInsertBlock()->getParent();
+    llvm::BasicBlock* thenBlock = llvm::BasicBlock::Create(context.llvmContext, "then", function);
+    llvm::BasicBlock* elseBlock = llvm::BasicBlock::Create(context.llvmContext, "else", function);
+    llvm::BasicBlock* mergeBlock = llvm::BasicBlock::Create(context.llvmContext, "mergeBlock", function);
+
+    if (this->elseBlock == nullptr) {
+        context.builder.CreateCondBr(conditionValue, thenBlock, mergeBlock);
+    } else {
+        context.builder.CreateCondBr(conditionValue, thenBlock, elseBlock);
+    }
+
+    context.builder.SetInsertPoint(thenBlock);
+    context.pushBlock(thenBlock);
+
+    this->thenBlock->codeGen(context);
+
+    context.popBlock();
+    
+    thenBlock = context.builder.GetInsertBlock();
+
+    if (thenBlock->getTerminator() == nullptr) {
+        context.builder.CreateBr(mergeBlock);
+    }
+
+    if (this->elseBlock) {
+        context.builder.SetInsertPoint(elseBlock);
+
+        context.pushBlock(elseBlock);
+
+        this->elseBlock->codeGen(context);
+
+        context.popBlock();
+
+        elseBlock = context.builder.GetInsertBlock();
+
+        if (elseBlock->getTerminator() == nullptr) {
+            context.builder.CreateBr(mergeBlock);
+        }
+    }
+
+    context.builder.SetInsertPoint(mergeBlock);
+
+    return nullptr;
 }
 
 std::unique_ptr<NExpression> LogError(const char* str) {

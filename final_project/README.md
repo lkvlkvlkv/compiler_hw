@@ -70,6 +70,22 @@ Statement:
       DeclarationExpression SEMICOLON
     | AssignExpression SEMICOLON
     | FunctionCallExpression SEMICOLON
+    | IfStatement
+    ;
+
+IfStatement:
+      KW_IF LPAREN Condition RPAREN Block
+    | KW_IF LPAREN Condition RPAREN Block KW_ELSE Block
+    ;
+
+Block:
+      Statement
+    | LBRACE Statements RBRACE
+    ;
+
+Statements:
+      /* empty */
+    | Statements Statement
     ;
 
 DeclarationExpression:
@@ -153,13 +169,14 @@ LLVM 算是中大型的專案，在 windows 下載並成功建置就需要一番
 ## 編譯器製作的成果：測試程式執行結果的截圖
 
 ```c
+int a = 1.5, b, c;  // global
 void print(int a);
 
 int testFunction(int a, int b);
 void nothing();
 
 int main() {
-    int a = 1.5, b, c;  // local
+    int a = 1.5, b;  // local
     float z;
     float x = 3.14, y = 2.71;
 
@@ -171,16 +188,26 @@ int main() {
 
     a = 5;
     b = a + 10;
-    c = (a + b) * 2 / testFunction(1, 2);
+    c = (a + b) * 2 / testFunction(1, 2); // global c = (5 + 15) * 2 / 3 = 40 / 3 = 13
+
+    if (a == b) {
+        c = a + b;
+    }
+    else if (a > b) {
+        c = a - b;
+    }
+    else {
+        c = a * b; // c = 75
+    }
 
     testFunction(3 + 5, a + b);
 
-    print(c);
+    print(c); // output 13
     return 0;
 }
 
 int testFunction(int a, int b) {
-    int c = a + b;
+    int c = a + b; // local c = a + b
     return c;
 }
 
