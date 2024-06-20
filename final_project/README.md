@@ -292,6 +292,8 @@ make
 
 ### 使用 compiler.exe 編譯程式
 
+會生成 output.o, output.ll，其中 output.ll 是 LLVM IR，output.o 是目標代碼。
+
 ``` bash
 compiler.exe < test.c
 ```
