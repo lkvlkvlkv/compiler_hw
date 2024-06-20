@@ -39,7 +39,8 @@ void ObjGen(CodeGenContext &context, const std::string &filename) {
     context.theModule.setTargetTriple(targetTriple);
 
     std::error_code EC;
-    llvm::raw_fd_ostream dest(filename, EC, llvm::sys::fs::OF_None);
+    std::string targetFilename = filename + ".o";
+    llvm::raw_fd_ostream dest(targetFilename, EC, llvm::sys::fs::OF_None);
     if (EC) {
         llvm::errs() << "Could not open file: " << EC.message();
         return;
@@ -54,4 +55,14 @@ void ObjGen(CodeGenContext &context, const std::string &filename) {
     context.theModule.print(llvm::errs(), nullptr);
     pass.run(context.theModule);
     dest.flush();
+
+    std::string llFilename = filename + ".ll";
+    llvm::raw_fd_ostream llDest(llFilename, EC, llvm::sys::fs::OF_None);
+    if (EC) {
+        llvm::errs() << "Could not open file: " << EC.message();
+        return;
+    }
+
+    context.theModule.print(llDest, nullptr);
+    llDest.flush();
 }
