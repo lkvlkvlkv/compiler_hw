@@ -28,13 +28,6 @@ int main() {
         c = a * b; // c = 75
     }
 
-    if (a < b) {
-        c = a + 3; // c = 8
-    }
-    else {
-        c = a - b;
-    }
-
     // while (c > 0) {
     //     c = c - 1;
     // }
