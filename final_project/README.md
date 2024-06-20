@@ -297,10 +297,15 @@ make
 #### 附圖
 
 - 掃描到的 token
+
 ![image](<https://hackmd-prod-images.s3-ap-northeast-1.amazonaws.com/uploads/upload_392212cfec56f37e293ec5d60c5adcc3.png?AWSAccessKeyId=AKIA3XSAAW6AWSKNINWO&Expires=1718887614&Signature=id939nrdT4mRxKf0tS0%2BNXLvCuU%3D>)
+
 - 語法分析建 AST 的過程
+
 ![image](<https://hackmd-prod-images.s3-ap-northeast-1.amazonaws.com/uploads/upload_e0a9ba29d13bcb44da1482b7abdaf4b1.png?AWSAccessKeyId=AKIA3XSAAW6AWSKNINWO&Expires=1718887615&Signature=b7rer3Mi32p1XXhMxKOM8dml9p4%3D>)
+
 - 生成的 LLVM IR ( 可以在 output.ll 查看 )
+
 ![image](<https://hackmd-prod-images.s3-ap-northeast-1.amazonaws.com/uploads/upload_7b9af785ba6f88bc66de5160de7a65b2.png?AWSAccessKeyId=AKIA3XSAAW6AWSKNINWO&Expires=1718887616&Signature=g4aY1sJdVLZFbb%2Fi2nKG0sbOKrU%3D>)
 
 ### 使用 compiler.exe 編譯程式
