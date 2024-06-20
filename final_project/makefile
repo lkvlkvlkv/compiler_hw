@@ -20,7 +20,7 @@ compiler: $(OBJS)
 %.o: %.cpp
 		g++ -I $(INCLUDEDIR) -c $< $(LIBS) $(LDFLAGS) $(CFLAGS)
 
-codeGen.o: codeGen.cpp grammar.hpp
+codeGen.o: codeGen.cpp grammar.hpp codeGen.hpp
 		g++ -I $(INCLUDEDIR) -c codeGen.cpp $(LIBS) $(LDFLAGS) $(CFLAGS)
 
 token.o: token.cpp grammar.hpp
@@ -40,3 +40,5 @@ clean:
 
 run:
 		./compiler.exe < correct_code.c
+		g++ output.o IO.o -o output
+		./output.exe
