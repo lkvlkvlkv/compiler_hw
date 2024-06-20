@@ -45,8 +45,8 @@ NProgram* programBlock;
 %type <program> Program
 %type <stmtvec> GlobalStatements
 %type <block> FunctionBlock FunctionStatements Block Statements
-%type <stmt> Statement GlobalStatement FunctionDeclaration FunctionDefinition FunctionStatement IfStatement WhileStatement
-%type <expr> Condition Expression Term Factor Numeric AssignExpression FunctionCallExpression DeclarationExpression FPDeclaration
+%type <stmt> Statement GlobalStatement FunctionDeclaration FunctionDefinition FunctionStatement IfStatement WhileStatement ForStatement ReturnStatement ContinueStatement BreakStatement
+%type <expr> Condition Expression Term Factor Numeric AssignExpression FunctionCallExpression DeclarationExpression FPDeclaration ForInitExpression
 %type <varvec> DeclarationList FPDeclarationList
 %type <exprvec> FCParameterList
 %type <identifier> Identifier
@@ -133,13 +133,18 @@ FunctionStatements:
 
 FunctionStatement:
       Statement
-    | KW_RETURN Expression SEMICOLON {
+    | ReturnStatement
+    ;
+
+ReturnStatement:
+      KW_RETURN Expression SEMICOLON {
         $$ = new NReturnStatement(std::shared_ptr<NExpression>($2));
       }
     | KW_RETURN SEMICOLON {
         $$ = new NReturnStatement();
       }
     ;
+
 
 FunctionCallExpression:
       Identifier LPAREN FCParameterList RPAREN {
@@ -172,13 +177,39 @@ Statement:
     | FunctionCallExpression SEMICOLON {
         $$ = new NExpressionStatement(std::shared_ptr<NExpression>($1));
       }
-    | IfStatement {
+    | IfStatement
+    | WhileStatement
+    | ForStatement
+    | ContinueStatement
+    | BreakStatement
+    | ReturnStatement
+    ;
+
+ForStatement:
+      KW_FOR LPAREN ForInitExpression SEMICOLON Condition SEMICOLON AssignExpression RPAREN Block {
+        $$ = new NForStatement(std::shared_ptr<NExpression>($3), std::shared_ptr<NExpression>($5), std::shared_ptr<NExpression>($7), std::shared_ptr<NBlock>($9));
+      }
+    ;
+
+ForInitExpression:
+      DeclarationExpression {
         $$ = $1;
       }
-    | WhileStatement {
+    | AssignExpression {
         $$ = $1;
       }
     ;
+
+ContinueStatement:
+      KW_CONTINUE SEMICOLON {
+        $$ = new NContinueStatement();
+      }
+    ;
+
+BreakStatement:
+      KW_BREAK SEMICOLON {
+        $$ = new NBreakStatement();
+      }
 
 WhileStatement:
       KW_WHILE LPAREN Condition RPAREN Block {

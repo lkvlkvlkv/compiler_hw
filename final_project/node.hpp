@@ -183,3 +183,25 @@ public:
     NWhileStatement(std::shared_ptr<NExpression> condition, std::shared_ptr<NBlock> block) : condition(condition), block(block) {}
     virtual llvm::Value* codeGen(CodeGenContext& context);
 };
+
+class NForStatement : public NStatement {
+public:
+    std::shared_ptr<NExpression> init;
+    std::shared_ptr<NExpression> condition;
+    std::shared_ptr<NExpression> increment;
+    std::shared_ptr<NBlock> block;
+    NForStatement(std::shared_ptr<NExpression> init, std::shared_ptr<NExpression> condition, std::shared_ptr<NExpression> increment, std::shared_ptr<NBlock> block) : init(init), condition(condition), increment(increment), block(block) {}
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+};
+
+class NContinueStatement : public NStatement {
+public:
+    NContinueStatement() {}
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+};
+
+class NBreakStatement : public NStatement {
+public:
+    NBreakStatement() {}
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+};

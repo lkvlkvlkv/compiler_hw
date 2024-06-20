@@ -333,12 +333,11 @@ llvm::Value* NIfStatement::codeGen(CodeGenContext& context) {
 llvm::Value* NWhileStatement::codeGen(CodeGenContext& context) {
     std::cout << "Creating while statement\n";
     llvm::Function* function = context.builder.GetInsertBlock()->getParent();
-    llvm::BasicBlock* conditionBlock = llvm::BasicBlock::Create(context.llvmContext, "condition", function);
-    llvm::BasicBlock* loopBlock = llvm::BasicBlock::Create(context.llvmContext, "loop", function);
-    llvm::BasicBlock* afterBlock = llvm::BasicBlock::Create(context.llvmContext, "after", function);
+    llvm::BasicBlock* conditionBlock = llvm::BasicBlock::Create(context.llvmContext, "while_condition", function);
+    llvm::BasicBlock* loopBlock = llvm::BasicBlock::Create(context.llvmContext, "while_loop", function);
+    llvm::BasicBlock* afterBlock = llvm::BasicBlock::Create(context.llvmContext, "while_after", function);
 
     context.builder.CreateBr(conditionBlock);
-
     context.builder.SetInsertPoint(conditionBlock);
     context.pushBlock(conditionBlock);
 
@@ -353,6 +352,8 @@ llvm::Value* NWhileStatement::codeGen(CodeGenContext& context) {
 
     context.builder.SetInsertPoint(loopBlock);
     context.pushBlock(loopBlock);
+    context.setBreakStack(afterBlock);
+    context.setContinueStack(conditionBlock);
 
     this->block->codeGen(context);
 
@@ -366,6 +367,72 @@ llvm::Value* NWhileStatement::codeGen(CodeGenContext& context) {
 
     context.builder.SetInsertPoint(afterBlock);
 
+    context.popContinueStack();
+    context.popBreakStack();
+    return nullptr;
+}
+
+llvm::Value* NForStatement::codeGen(CodeGenContext& context) {
+    std::cout << "Creating for statement\n";
+    llvm::Function* function = context.builder.GetInsertBlock()->getParent();
+    llvm::BasicBlock* initBlock = llvm::BasicBlock::Create(context.llvmContext, "for_init", function);
+    llvm::BasicBlock* conditionBlock = llvm::BasicBlock::Create(context.llvmContext, "for_condition", function);
+    llvm::BasicBlock* loopBlock = llvm::BasicBlock::Create(context.llvmContext, "for_loop", function);
+    llvm::BasicBlock* incrementBlock = llvm::BasicBlock::Create(context.llvmContext, "for_increment", function);
+    llvm::BasicBlock* afterBlock = llvm::BasicBlock::Create(context.llvmContext, "for_after", function);
+
+    context.builder.CreateBr(initBlock);
+    context.builder.SetInsertPoint(initBlock);
+    init->codeGen(context);
+    context.builder.CreateBr(conditionBlock);
+
+    context.builder.SetInsertPoint(conditionBlock);
+    llvm::Value* conditionValue = condition->codeGen(context);
+    if (!conditionValue) {
+        std::cout << "Condition value is null\n";
+        return nullptr;
+    }
+    context.builder.CreateCondBr(conditionValue, loopBlock, afterBlock);
+
+    context.builder.SetInsertPoint(loopBlock);
+    context.pushBlock(loopBlock);
+    context.setBreakStack(afterBlock);
+    context.setContinueStack(incrementBlock);
+    this->block->codeGen(context);
+    context.popBlock();
+
+    loopBlock = context.builder.GetInsertBlock();
+    if (loopBlock->getTerminator() == nullptr) {
+        context.builder.CreateBr(incrementBlock);
+    }
+
+    context.builder.SetInsertPoint(incrementBlock);
+    increment->codeGen(context);
+    context.builder.CreateBr(conditionBlock);
+
+    context.builder.SetInsertPoint(afterBlock);
+    context.popBreakStack();
+    context.popContinueStack();
+    return nullptr;
+}
+
+llvm::Value* NContinueStatement::codeGen(CodeGenContext& context) {
+    std::cout << "Creating continue statement\n";
+    llvm::BasicBlock* loopBlock = context.getContinueStack();
+    if (loopBlock == nullptr) {
+        return LogErrorV("Continue statement not in loop");
+    }
+    context.builder.CreateBr(loopBlock);
+    return nullptr;
+}
+
+llvm::Value* NBreakStatement::codeGen(CodeGenContext& context) {
+    std::cout << "Creating break statement\n";
+    llvm::BasicBlock* loopBlock = context.getBreakStack();
+    if (loopBlock == nullptr) {
+        return LogErrorV("Break statement not in loop");
+    }
+    context.builder.CreateBr(loopBlock);
     return nullptr;
 }
 

@@ -27,6 +27,8 @@ public:
 class CodeGenContext {
 private:
     std::vector<CodeGenBlock*> blockStack;
+    std::vector<llvm::BasicBlock*> continueStack;
+    std::vector<llvm::BasicBlock*> breakStack;
 
 public:
     llvm::LLVMContext llvmContext;
@@ -75,6 +77,30 @@ public:
 
     bool isGlobal() const {
         return blockStack.size() == 0;
+    }
+
+    void setContinueStack(llvm::BasicBlock* block) {
+        continueStack.push_back(block);
+    }
+
+    llvm::BasicBlock* getContinueStack() {
+        return continueStack.back();
+    }
+
+    void popContinueStack() {
+        continueStack.pop_back();
+    }
+
+    void setBreakStack(llvm::BasicBlock* block) {
+        breakStack.push_back(block);
+    }
+
+    llvm::BasicBlock* getBreakStack() {
+        return breakStack.back();
+    }
+
+    void popBreakStack() {
+        breakStack.pop_back();
     }
 
     void setSymbolValue(std::string name, llvm::Value* value) {
