@@ -33,25 +33,34 @@ public:
     llvm::IRBuilder<> builder;
     llvm::Module theModule;
     std::map<std::string, llvm::Value*> globalVars;
+    std::map<std::string, llvm::Type*> globalVarsType;
     TypeSystem typeSystem;
 
     CodeGenContext() : builder(llvmContext), typeSystem(llvmContext), theModule("main", this->llvmContext) {}
 
-    llvm::Value* getSymbolValue(std::string name) const {
+    llvm::Value* getSymbolValue(std::string name) {
         for (auto it = blockStack.rbegin(); it != blockStack.rend(); it++) {
             if ((*it)->locals.find(name) != (*it)->locals.end()) {
                 return (*it)->locals[name];
             }
         }
+        if (globalVars.find(name) != globalVars.end()) {
+            return globalVars[name];
+        }
+        std::cout << "Unknown variable name: " << name << std::endl;
         return nullptr;
     }
 
-    llvm::Type* getSymbolType(std::string name) const {
+    llvm::Type* getSymbolType(std::string name) {
         for (auto it = blockStack.rbegin(); it != blockStack.rend(); it++) {
             if ((*it)->types.find(name) != (*it)->types.end()) {
                 return (*it)->types[name];
             }
         }
+        if (globalVarsType.find(name) != globalVarsType.end()) {
+            return globalVarsType[name];
+        }
+        std::cout << "Unknown variable name: " << name << std::endl;
         return nullptr;
     }
 
@@ -64,11 +73,23 @@ public:
         return false;
     }
 
+    bool isGlobal() const {
+        return blockStack.size() == 0;
+    }
+
     void setSymbolValue(std::string name, llvm::Value* value) {
+        if (isGlobal()) {
+            globalVars[name] = value;
+            return;
+        }
         blockStack.back()->locals[name] = value;
     }
 
     void setSymbolType(std::string name, llvm::Type* type) {
+        if (isGlobal()) {
+            globalVarsType[name] = type;
+            return;
+        }
         blockStack.back()->types[name] = type;
     }
 

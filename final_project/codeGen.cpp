@@ -70,8 +70,15 @@ llvm::Value* NIdentifier::codeGen(CodeGenContext& context) {
 llvm::Value* NAssignment::codeGen(CodeGenContext& context) {
     std::cout << "Creating assignment for " << lhs->name << std::endl;
     llvm::Value* value = rhs->codeGen(context);
-    context.builder.CreateStore(value, context.getSymbolValue(lhs->name));
-    return value;
+    if (!value) {
+        return nullptr;
+    }
+    llvm::Value* lhsValue = context.getSymbolValue(lhs->name);
+    if (!lhsValue) {
+        LogErrorV("Unknown variable name : " + lhs->name);
+        return nullptr;
+    }
+    return context.builder.CreateStore(value, lhsValue);
 }
 
 llvm::Value* NVariableDeclarationList::codeGen(CodeGenContext& context) {
@@ -84,6 +91,29 @@ llvm::Value* NVariableDeclarationList::codeGen(CodeGenContext& context) {
 }
 
 llvm::Value* NVariableDeclaration::codeGen(CodeGenContext& context) {
+    if (context.isGlobal()) {
+        // global variable
+        std::cout << "Creating global variable declaration of " << id->name << std::endl;
+        llvm::Type* type = this->type->codeGen(context);
+
+        context.theModule.getOrInsertGlobal(id->name, type);
+        llvm::GlobalVariable* global = context.theModule.getNamedGlobal(id->name);
+        global->setLinkage(llvm::GlobalValue::CommonLinkage);
+
+        if (assignmentExpr != nullptr) {
+            llvm::Value* assignmentValue = assignmentExpr->codeGen(context);
+            global->setInitializer(llvm::dyn_cast<llvm::Constant>(assignmentValue));
+        }
+        else {
+            global->setInitializer(llvm::Constant::getNullValue(type));
+        }
+
+        context.setSymbolType(id->name, type);
+        context.setSymbolValue(id->name, global);    
+        return global;
+    }
+
+    // local variable
     std::cout << "Creating variable declaration of " << id->name << std::endl;
     llvm::Type* type = this->type->codeGen(context);
     llvm::Value* inst = context.builder.CreateAlloca(type, nullptr, this->id->name.c_str());
@@ -93,9 +123,8 @@ llvm::Value* NVariableDeclaration::codeGen(CodeGenContext& context) {
         context.builder.CreateStore(assignmentValue, inst);
     }
 
-    context.setSymbolType(id->name, this->type->codeGen(context));
+    context.setSymbolType(id->name, type);
     context.setSymbolValue(id->name, inst);
-
     return inst;
 }
 
@@ -194,7 +223,6 @@ llvm::Value* NFunctionDeclaration::codeGen(CodeGenContext& context) {
     }
 
     context.popBlock();
-    llvm::verifyFunction(*function);
     return function;
 }
 
