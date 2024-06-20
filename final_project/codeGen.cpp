@@ -313,6 +313,45 @@ llvm::Value* NIfStatement::codeGen(CodeGenContext& context) {
     return nullptr;
 }
 
+llvm::Value* NWhileStatement::codeGen(CodeGenContext& context) {
+    std::cout << "Creating while statement\n";
+    llvm::Function* function = context.builder.GetInsertBlock()->getParent();
+    llvm::BasicBlock* conditionBlock = llvm::BasicBlock::Create(context.llvmContext, "condition", function);
+    llvm::BasicBlock* loopBlock = llvm::BasicBlock::Create(context.llvmContext, "loop", function);
+    llvm::BasicBlock* afterBlock = llvm::BasicBlock::Create(context.llvmContext, "after", function);
+
+    context.builder.CreateBr(conditionBlock);
+
+    context.builder.SetInsertPoint(conditionBlock);
+    context.pushBlock(conditionBlock);
+
+    llvm::Value* conditionValue = condition->codeGen(context);
+    std::cout << "Condition value: " << conditionValue << std::endl;
+    if (!conditionValue) {
+        std::cout << "Condition value is null\n";
+        return nullptr;
+    }
+
+    context.builder.CreateCondBr(conditionValue, loopBlock, afterBlock);
+
+    context.builder.SetInsertPoint(loopBlock);
+    context.pushBlock(loopBlock);
+
+    this->block->codeGen(context);
+
+    context.popBlock();
+
+    loopBlock = context.builder.GetInsertBlock();
+
+    if (loopBlock->getTerminator() == nullptr) {
+        context.builder.CreateBr(conditionBlock);
+    }
+
+    context.builder.SetInsertPoint(afterBlock);
+
+    return nullptr;
+}
+
 std::unique_ptr<NExpression> LogError(const char* str) {
     std::cout << "LogError: " << str << "\n"
               << std::endl;

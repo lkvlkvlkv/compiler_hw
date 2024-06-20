@@ -28,9 +28,9 @@ int main() {
         c = a * b; // c = 75
     }
 
-    // while (c > 0) {
-    //     c = c - 1;
-    // }
+    while (c > 0) {
+        c = c / 2;
+    }
 
     // for (int i = 0; i < 10; i = i + 1) {
     //     x = x + y;

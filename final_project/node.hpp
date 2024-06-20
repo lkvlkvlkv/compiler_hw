@@ -175,3 +175,11 @@ public:
     NIfStatement(std::shared_ptr<NExpression> condition, std::shared_ptr<NBlock> thenBlock, std::shared_ptr<NBlock> elseBlock = nullptr) : condition(condition), thenBlock(thenBlock), elseBlock(elseBlock) {}
     virtual llvm::Value* codeGen(CodeGenContext& context);
 };
+
+class NWhileStatement : public NStatement {
+public:
+    std::shared_ptr<NExpression> condition;
+    std::shared_ptr<NBlock> block;
+    NWhileStatement(std::shared_ptr<NExpression> condition, std::shared_ptr<NBlock> block) : condition(condition), block(block) {}
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+};

@@ -71,6 +71,11 @@ Statement:
     | AssignExpression SEMICOLON
     | FunctionCallExpression SEMICOLON
     | IfStatement
+    | WhileStatement
+    ;
+
+WhileStatement:
+      KW_WHILE LPAREN Condition RPAREN Block
     ;
 
 IfStatement:
@@ -198,6 +203,10 @@ int main() {
     }
     else {
         c = a * b; // c = 75
+    }
+
+    while (c > 0) {
+        c = c / 2;
     }
 
     testFunction(3 + 5, a + b);

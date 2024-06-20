@@ -45,7 +45,7 @@ NProgram* programBlock;
 %type <program> Program
 %type <stmtvec> GlobalStatements
 %type <block> FunctionBlock FunctionStatements Block Statements
-%type <stmt> Statement GlobalStatement FunctionDeclaration FunctionDefinition FunctionStatement IfStatement
+%type <stmt> Statement GlobalStatement FunctionDeclaration FunctionDefinition FunctionStatement IfStatement WhileStatement
 %type <expr> Condition Expression Term Factor Numeric AssignExpression FunctionCallExpression DeclarationExpression FPDeclaration
 %type <varvec> DeclarationList FPDeclarationList
 %type <exprvec> FCParameterList
@@ -174,6 +174,15 @@ Statement:
       }
     | IfStatement {
         $$ = $1;
+      }
+    | WhileStatement {
+        $$ = $1;
+      }
+    ;
+
+WhileStatement:
+      KW_WHILE LPAREN Condition RPAREN Block {
+        $$ = new NWhileStatement(std::shared_ptr<NExpression>($3), std::shared_ptr<NBlock>($5));
       }
     ;
 
