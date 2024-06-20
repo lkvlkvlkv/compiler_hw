@@ -12,18 +12,20 @@ extern yylex(void);
 extern int yylineno;
 extern int yycolumn;
 extern char* yytext;
-NBlock* programBlock;
+NProgram* programBlock;
 
 %}
 
 %locations
 
 %union {
+    NProgram *program;
+    NType *type;
     NBlock *block;
     NExpression *expr;
     NStatement *stmt;
     NIdentifier *identifier;
-    NVariableDeclaration *var_decl;
+    std::vector<std::shared_ptr<NStatement>> *stmtvec;
     std::vector<std::shared_ptr<NVariableDeclaration>> *varvec;
     std::vector<std::shared_ptr<NExpression>> *exprvec;
     std::string *string;
@@ -31,9 +33,7 @@ NBlock* programBlock;
 }
 
 %token <string> NUMBER FRAC_NUMBER IDENTIFIER
-
 %token <string> KW_VOID KW_INT KW_FLOAT
-
 %token <token> KW_IF KW_ELSE KW_WHILE KW_FOR KW_DO KW_RETURN
 %token <token> KW_BREAK KW_CONTINUE
 
@@ -42,12 +42,15 @@ NBlock* programBlock;
 %token <token> LPAREN RPAREN LBRACE RBRACE
 %token <token> SEMICOLON COMMA
 
-%type <block> Program GlobalStatements FunctionBlock FunctionStatements
-%type <stmt> Statement GlobalStatement FunctionDeclaration FunctionDefinition FunctionStatement FPDeclaration
-%type <expr> Condition Expression Term Factor Numeric AssignExpression DeclarationExpression FunctionCallExpression
+%type <program> Program
+%type <stmtvec> GlobalStatements
+%type <block> FunctionBlock FunctionStatements
+%type <stmt> Statement GlobalStatement FunctionDeclaration FunctionDefinition FunctionStatement
+%type <expr> Condition Expression Term Factor Numeric AssignExpression FunctionCallExpression DeclarationExpression FPDeclaration
 %type <varvec> DeclarationList FPDeclarationList
 %type <exprvec> FCParameterList
-%type <identifier> type Identifier
+%type <identifier> Identifier
+%type <type> type
 
 %start Program
 
@@ -55,39 +58,41 @@ NBlock* programBlock;
 
 Program:
       GlobalStatements {
-        programBlock = $1;
+        $$ = new NProgram();
+        $$->statements = *$1;
+        programBlock = $$;
       }
     ;
 
 GlobalStatements:
       GlobalStatement {
-        $$ = new NBlock();
-        $$->statements.push_back($1);
+        $$ = new std::vector<std::shared_ptr<NStatement>>();
+        $$->push_back(std::shared_ptr<NStatement>($1));
       }
     | GlobalStatements GlobalStatement {
-        $1->statements.push_back($2);
+        $1->push_back(std::shared_ptr<NStatement>($2));
       } 
     ;
 
 GlobalStatement:
-      FunctionDeclaration SEMICOLON {
+      FunctionDeclaration
+    | FunctionDefinition SEMICOLON {
         $$ = $1;
       }
-    | FunctionDefinition
     | DeclarationExpression SEMICOLON {
         $$ = new NExpressionStatement(std::shared_ptr<NExpression>($1));
       }
     ;
 
-FunctionDeclaration:
+FunctionDefinition:
       type Identifier LPAREN FPDeclarationList RPAREN {
-        $$ = new NFunctionDeclaration(std::shared_ptr<NIdentifier>($2), std::shared_ptr<NIdentifier>($1), std::vector<std::shared_ptr<NVariableDeclaration>>(*$4));
+        $$ = new NFunctionDefinition(std::shared_ptr<NType>($1), std::shared_ptr<NIdentifier>($2), std::vector<std::shared_ptr<NVariableDeclaration>>(*$4));
       }
     ;
 
-FunctionDefinition:
-      FunctionDeclaration FunctionBlock  {
-        $$ = new NFunctionDefinition(std::shared_ptr<NFunctionDeclaration>(dynamic_cast<NFunctionDeclaration*>($1)), std::shared_ptr<NBlock>($2));
+FunctionDeclaration:
+      FunctionDefinition FunctionBlock {
+        $$ = new NFunctionDeclaration(std::shared_ptr<NFunctionDefinition>(dynamic_cast<NFunctionDefinition*>($1)), std::shared_ptr<NBlock>($2));
       }
     ;
 
@@ -106,7 +111,7 @@ FPDeclarationList:
 
 FPDeclaration:
       type Identifier {
-        $$ = new NVariableDeclaration(std::shared_ptr<NIdentifier>($1), std::shared_ptr<NIdentifier>($2), nullptr);
+        $$ = new NVariableDeclaration(std::shared_ptr<NType>($1), std::shared_ptr<NIdentifier>($2), nullptr);
       }
     ;
 
@@ -173,8 +178,9 @@ DeclarationExpression:
       type DeclarationList {
         std::vector<std::shared_ptr<NVariableDeclaration>> *varList = $2;
         for (auto it = varList->begin(); it != varList->end(); it++) {
-            (*it)->type = std::shared_ptr<NIdentifier>($1);
+            (*it)->type = std::shared_ptr<NType>($1);
         }
+        $$ = new NVariableDeclarationList(*varList);
       }
     ;
 
@@ -279,13 +285,13 @@ Numeric:
 
 type:
       KW_INT {
-        $$ = new NIdentifier(*$1);
+        $$ = new NType(*$1);
       }
     | KW_FLOAT {
-        $$ = new NIdentifier(*$1);
+        $$ = new NType(*$1);
       }
     | KW_VOID {
-        $$ = new NIdentifier(*$1);
+        $$ = new NType(*$1);
       }
     ;
 

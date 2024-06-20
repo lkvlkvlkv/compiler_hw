@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 #include "node.hpp"
-#include "grammer.hpp"
+#include "grammar.hpp"
 
 #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno; \
     yylloc.first_column = yycolumn; yylloc.last_column = yycolumn+yyleng-1; \

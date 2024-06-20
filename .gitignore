@@ -11,6 +11,6 @@ yacc.output
 
 .vscode/**
 token.cpp
-grammer.hpp
-grammer.cpp
+grammar.hpp
+grammar.cpp
 compiler.exe
