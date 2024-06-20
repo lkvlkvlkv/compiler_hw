@@ -8,8 +8,6 @@ llvm::Type* TypeSystem::getVarType(const NIdentifier& type) const {
 llvm::Type* TypeSystem::getVarType(std::string typeStr) const {
     if (typeStr.compare("int") == 0) {
         return intTy;
-    } else if (typeStr.compare("float") == 0) {
-        return floatTy;
     } else if (typeStr.compare("double") == 0) {
         return doubleTy;
     } else if (typeStr.compare("void") == 0) {

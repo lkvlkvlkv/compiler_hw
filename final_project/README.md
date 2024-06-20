@@ -147,7 +147,7 @@ Numeric:
 
 type:
       KW_INT
-    | KW_FLOAT
+    | KW_Double
     | KW_VOID
     ;
 ```
@@ -175,16 +175,19 @@ LLVM 算是中大型的專案，在 windows 下載並成功建置就需要一番
 
 ```c
 int a = 1.5, b, c;  // global
-void print(int a);
+void printInt(int a);
+void printDouble(int a);
 
 int testFunction(int a, int b);
 void nothing();
 
 int main() {
     int a = 1.5, b;  // local
-    float z;
-    float x = 3.14, y = 2.71;
+    double z;
+    double x = 3.14, y = 2.71;
 
+    printDouble(x);
+    printDouble(y);
     /*
     multiline comment
     */
@@ -211,7 +214,7 @@ int main() {
 
     testFunction(3 + 5, a + b);
 
-    print(c); // output 13
+    printInt(c); // output 13
     return 0;
 }
 

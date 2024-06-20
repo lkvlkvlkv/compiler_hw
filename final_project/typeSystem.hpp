@@ -19,18 +19,13 @@ private:
     void addCast(llvm::Type* from, llvm::Type* to, llvm::CastInst::CastOps op);
 
 public:
-    llvm::Type* intTy = llvm::Type::getInt32Ty(llvmContext);
-    llvm::Type* floatTy = llvm::Type::getFloatTy(llvmContext);
+    llvm::Type* intTy = llvm::Type::getInt64Ty(llvmContext);
     llvm::Type* doubleTy = llvm::Type::getDoubleTy(llvmContext);
     llvm::Type* voidTy = llvm::Type::getVoidTy(llvmContext);
 
     TypeSystem(llvm::LLVMContext &context): llvmContext(context){
-        addCast(intTy, floatTy, llvm::CastInst::SIToFP);
         addCast(intTy, doubleTy, llvm::CastInst::SIToFP);
-        addCast(floatTy, doubleTy, llvm::CastInst::FPExt);
-        addCast(floatTy, intTy, llvm::CastInst::FPToSI);
         addCast(doubleTy, intTy, llvm::CastInst::FPToSI);
-        addCast(intTy, intTy, llvm::CastInst::SExt);
     }
 
     llvm::Type* getVarType(const NIdentifier& type) const;

@@ -1,13 +1,17 @@
 int a = 1.5, b, c;  // global
+void printInt(int a);
+void printDouble(double a);
 
 int testFunction(int a, int b);
 void nothing();
 
 int main() {
     int a = 1.5, b;  // local
-    float z;
-    float x = 3.14, y = 2.71;
+    double z;
+    double x = 3.14, y = 2.71;
 
+    printDouble(x);
+    printDouble(y);
     /*
     multiline comment
     */
@@ -42,6 +46,7 @@ int main() {
 
     testFunction(3 + 5, a + b);
 
+    printInt(c);
     return 0;
 }
 

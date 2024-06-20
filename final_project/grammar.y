@@ -33,7 +33,7 @@ NProgram* programBlock;
 }
 
 %token <string> NUMBER FRAC_NUMBER IDENTIFIER
-%token <string> KW_VOID KW_INT KW_FLOAT
+%token <string> KW_VOID KW_INT KW_DOUBLE
 %token <token> KW_IF KW_ELSE KW_WHILE KW_FOR KW_DO KW_RETURN
 %token <token> KW_BREAK KW_CONTINUE
 
@@ -327,7 +327,7 @@ type:
       KW_INT {
         $$ = new NType(*$1);
       }
-    | KW_FLOAT {
+    | KW_DOUBLE {
         $$ = new NType(*$1);
       }
     | KW_VOID {

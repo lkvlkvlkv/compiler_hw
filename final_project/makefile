@@ -40,5 +40,6 @@ clean:
 
 run:
 		./compiler.exe < correct_code.c
+		g++ IO.cpp -c -o IO.o
 		g++ output.o IO.o -o output
 		./output.exe

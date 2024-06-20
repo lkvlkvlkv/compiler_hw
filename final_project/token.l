@@ -46,11 +46,11 @@ int yycolumn = 1;
 "return"        { std::cout << "TOKEN: KW_RETURN\n";   TOKEN(KW_RETURN); }
 
 "int"           { SAVE_TOKEN; std::cout << "TOKEN: KW_INT\n";      return KW_INT;   }
-"float"         { SAVE_TOKEN; std::cout << "TOKEN: KW_FLOAT\n";    return KW_FLOAT; }
+"double"         { SAVE_TOKEN; std::cout << "TOKEN: KW_DOUBLE\n";    return KW_DOUBLE; }
 "void"          { SAVE_TOKEN; std::cout << "TOKEN: KW_VOID\n";     return KW_VOID;  }
 
 [0-9]+                   { SAVE_TOKEN;     std::cout << "TOKEN: INT " << yytext << "\n";          return NUMBER; }
-[0-9]+"."[0-9]*          { SAVE_TOKEN;     std::cout << "TOKEN: FLOAT " << yytext << "\n";        return FRAC_NUMBER; }
+[0-9]+"."[0-9]*          { SAVE_TOKEN;     std::cout << "TOKEN: DOUBLE " << yytext << "\n";        return FRAC_NUMBER; }
 [A-Za-z_][A-Za-z0-9_]*   { SAVE_TOKEN;     std::cout << "TOKEN: IDENTIFIER " << yytext << "\n";   return IDENTIFIER; }
 
 "=="            { std::cout << "TOKEN: EQ\n";   TOKEN(COM_EQ); }
