@@ -133,6 +133,7 @@ llvm::Value* NBinaryOperator::codeGen(CodeGenContext& context) {
     std::cout << "Creating binary operation " << op << std::endl;
     llvm::Value* left = lhs->codeGen(context);
     llvm::Value* right = rhs->codeGen(context);
+    bool fp = false;
 
     if (!left || !right) {
         return nullptr;
@@ -143,27 +144,43 @@ llvm::Value* NBinaryOperator::codeGen(CodeGenContext& context) {
         return nullptr;
     }
 
+    if( (left->getType()->getTypeID() == llvm::Type::DoubleTyID) || (right->getType()->getTypeID() == llvm::Type::DoubleTyID) ){  // type upgrade
+        fp = true;
+        if( (right->getType()->getTypeID() != llvm::Type::DoubleTyID) ){
+            left = context.builder.CreateUIToFP(right, llvm::Type::getDoubleTy(context.llvmContext), "ftmp");
+        }
+        if( (left->getType()->getTypeID() != llvm::Type::DoubleTyID) ){
+            left = context.builder.CreateUIToFP(left, llvm::Type::getDoubleTy(context.llvmContext), "ftmp");
+        }
+    }
+
+    std::string type_str1, type_str2;
+    llvm::raw_string_ostream rso1(type_str1), rso2(type_str2);
+    left->getType()->print(rso1);
+    right->getType()->print(rso2);
+    std::cout << "Type1: " << rso1.str() << " Type2: " << rso2.str() << std::endl;
+
     switch (op) {
         case OP_PLUS:
-            return context.builder.CreateAdd(left, right, "addtmp");
+            return fp? context.builder.CreateFAdd(left, right, "addtmp") : context.builder.CreateAdd(left, right, "addtmp");
         case OP_MINUS:
-            return context.builder.CreateSub(left, right, "subtmp");
+            return fp? context.builder.CreateFSub(left, right, "subtmp") : context.builder.CreateSub(left, right, "subtmp");
         case OP_MULT:
-            return context.builder.CreateMul(left, right, "multmp");
+            return fp? context.builder.CreateFMul(left, right, "multmp") : context.builder.CreateMul(left, right, "multmp");
         case OP_DIV:
-            return context.builder.CreateSDiv(left, right, "divtmp");
+            return fp? context.builder.CreateFDiv(left, right, "divtmp") : context.builder.CreateSDiv(left, right, "divtmp");
         case COM_LT:
-            return context.builder.CreateICmpSLT(left, right, "lttmp");
+            return fp? context.builder.CreateFCmpOLT(left, right, "lttmp") : context.builder.CreateICmpSLT(left, right, "lttmp");
         case COM_GT:
-            return context.builder.CreateICmpSGT(left, right, "gttmp");
+            return fp? context.builder.CreateFCmpOGT(left, right, "gttmp") : context.builder.CreateICmpSGT(left, right, "gttmp");
         case COM_EQ:
-            return context.builder.CreateICmpEQ(left, right, "eqtmp");
+            return fp? context.builder.CreateFCmpOEQ(left, right, "eqtmp") : context.builder.CreateICmpEQ(left, right, "eqtmp");
         case COM_NE:
-            return context.builder.CreateICmpNE(left, right, "netmp");
+            return fp? context.builder.CreateFCmpONE(left, right, "netmp") : context.builder.CreateICmpNE(left, right, "netmp");
         case COM_LE:
-            return context.builder.CreateICmpSLE(left, right, "letmp");
+            return fp? context.builder.CreateFCmpOLE(left, right, "letmp") : context.builder.CreateICmpSLE(left, right, "letmp");
         case COM_GE:
-            return context.builder.CreateICmpSGE(left, right, "getmp");
+            return fp? context.builder.CreateFCmpOGE(left, right, "getmp") : context.builder.CreateICmpSGE(left, right, "getmp");
         default:
             LogErrorV("Invalid binary operator");
             return nullptr;
