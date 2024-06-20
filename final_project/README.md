@@ -6,150 +6,173 @@
 
 ## 編譯器支援的文法規則或功能
 
-```
-Program:
-      GlobalStatements
+``` BNF
+Program = GlobalStatements;
+
+GlobalStatements = 
+    | GlobalStatement 
+    | GlobalStatements GlobalStatement 
     ;
 
-GlobalStatements:
-      GlobalStatement
-    | GlobalStatements GlobalStatement
+GlobalStatement = 
+    | FunctionDeclaration
+    | FunctionDefinition ";" 
+    | DeclarationExpression ";" 
     ;
 
-GlobalStatement:
-      FunctionDeclaration
-    | FunctionDefinition SEMICOLON
-    | DeclarationExpression SEMICOLON
+FunctionDefinition = 
+    | type Identifier "(" FPDeclarationList ")" 
     ;
 
-FunctionDefinition:
-      type Identifier LPAREN FPDeclarationList RPAREN
+FunctionDeclaration = 
+    | FunctionDefinition FunctionBlock 
     ;
 
-FunctionDeclaration:
-      FunctionDefinition FunctionBlock
+FPDeclarationList = 
+    | /* empty */ 
+    | FPDeclarationList "," FPDeclaration 
+    | FPDeclaration 
     ;
 
-FPDeclarationList:
-      /* empty */
-    | FPDeclarationList COMMA FPDeclaration
-    | FPDeclaration
+FPDeclaration = 
+    | type Identifier 
     ;
 
-FPDeclaration:
-      type Identifier
+FunctionBlock = 
+    | "{" FunctionStatements "}" 
     ;
 
-FunctionBlock:
-      LBRACE FunctionStatements RBRACE
+FunctionStatements = 
+    | FunctionStatement 
+    | FunctionStatements FunctionStatement 
     ;
 
-FunctionStatements:
-      FunctionStatement
-    | FunctionStatements FunctionStatement
+FunctionStatement = 
+    | Statement 
+    | ReturnStatement 
     ;
 
-FunctionStatement:
-      Statement
-    | KW_RETURN Expression SEMICOLON
-    | KW_RETURN SEMICOLON
+ReturnStatement = 
+    | "return" Expression ";" 
+    | "return" ";" 
     ;
 
-FunctionCallExpression:
-      Identifier LPAREN FCParameterList RPAREN
+FunctionCallExpression = 
+    | Identifier "(" FCParameterList ")" 
     ;
 
-FCParameterList:
-      /* empty */
-    | FCParameterList COMMA Expression
-    | Expression
+FCParameterList = 
+    | /* empty */ 
+    | FCParameterList "," Expression 
+    | Expression 
     ;
 
-
-Statement:
-      DeclarationExpression SEMICOLON
-    | AssignExpression SEMICOLON
-    | FunctionCallExpression SEMICOLON
-    | IfStatement
-    | WhileStatement
+Statement = 
+    | DeclarationExpression ";" 
+    | AssignExpression ";" 
+    | FunctionCallExpression ";" 
+    | IfStatement 
+    | WhileStatement 
+    | ForStatement 
+    | ContinueStatement 
+    | BreakStatement 
+    | ReturnStatement 
     ;
 
-WhileStatement:
-      KW_WHILE LPAREN Condition RPAREN Block
+ForStatement = 
+    | "for" "(" ForInitExpression ";" Condition ";" AssignExpression ")" Block 
     ;
 
-IfStatement:
-      KW_IF LPAREN Condition RPAREN Block
-    | KW_IF LPAREN Condition RPAREN Block KW_ELSE Block
+ForInitExpression = 
+    | DeclarationExpression 
+    | AssignExpression 
     ;
 
-Block:
-      Statement
-    | LBRACE Statements RBRACE
+ContinueStatement = 
+    | "continue" ";" 
     ;
 
-Statements:
-      /* empty */
-    | Statements Statement
+BreakStatement = 
+    | "break" ";" 
     ;
 
-DeclarationExpression:
-      type DeclarationList
+WhileStatement = 
+    | "while" "(" Condition ")" Block 
     ;
 
-DeclarationList:
-      DeclarationList COMMA Identifier
-    | DeclarationList COMMA AssignExpression
-    | AssignExpression
-    | Identifier
+IfStatement = 
+    | "if" "(" Condition ")" Block 
+    | "if" "(" Condition ")" Block "else" Block 
     ;
 
-AssignExpression:
-      Identifier OP_ASSIGN Expression
+Block = 
+    | Statement 
+    | "{" Statements "}" 
     ;
 
-Condition:
-      Expression COM_LT Expression
-    | Expression COM_GT Expression
-    | Expression COM_EQ Expression
-    | Expression COM_LE Expression
-    | Expression COM_GE Expression
-    | Expression COM_NE Expression
+Statements = 
+    | /* empty */ 
+    | Statements Statement 
     ;
 
-Expression:
-      Term
-    | Expression OP_PLUS Term
-    | Expression OP_MINUS Term
+DeclarationExpression = 
+    | type DeclarationList 
     ;
 
-Term:
-      Factor
-    | Term OP_MULT Factor
-    | Term OP_DIV Factor
+DeclarationList = 
+    | DeclarationList "," Identifier 
+    | DeclarationList "," AssignExpression 
+    | AssignExpression 
+    | Identifier 
     ;
 
-Factor:
-      Identifier
-    | Numeric
-    | LPAREN Expression RPAREN
-    | FunctionCallExpression
+AssignExpression = 
+    | Identifier "=" Expression 
     ;
 
-Identifier:
-      IDENTIFIER
+Condition = 
+    | Expression "<" Expression 
+    | Expression ">" Expression 
+    | Expression "==" Expression 
+    | Expression "<=" Expression 
+    | Expression ">=" Expression 
+    | Expression "!=" Expression 
     ;
 
-Numeric:
-      NUMBER
-    | FRAC_NUMBER
+Expression = 
+    | Term 
+    | Expression "+" Term 
+    | Expression "-" Term 
     ;
 
-type:
-      KW_INT
-    | KW_Double
-    | KW_VOID
+Term = 
+    | Factor 
+    | Term "*" Factor 
+    | Term "/" Factor 
     ;
+
+Factor = 
+    | Identifier 
+    | Numeric 
+    | "(" Expression ")" 
+    | FunctionCallExpression 
+    ;
+
+Identifier = 
+    | IDENTIFIER 
+    ;
+
+Numeric = 
+    | NUMBER 
+    | FRAC_NUMBER 
+    ;
+
+type = 
+    | "int" 
+    | "double" 
+    | "void" 
+    ;
+
 ```
 
 ## 編譯器製作的過程
@@ -175,11 +198,13 @@ LLVM 算是中大型的專案，在 windows 下載並成功建置就需要一番
 
 ```c
 int a = 1.5, b, c;  // global
+
 void printInt(int a);
-void printDouble(int a);
+void printDouble(double a);
 
 int testFunction(int a, int b);
 void nothing();
+int fib(int a);
 
 int main() {
     int a = 1.5, b;  // local
@@ -187,16 +212,16 @@ int main() {
     double x = 3.14, y = 2.71;
 
     printDouble(x);
-    printDouble(y);
     /*
     multiline comment
     */
 
     int z = testFunction(1, 2);
+    printInt(z);
 
     a = 5;
     b = a + 10;
-    c = (a + b) * 2 / testFunction(1, 2); // global c = (5 + 15) * 2 / 3 = 40 / 3 = 13
+    c = (a + b) * 2 / testFunction(3 + 5, a + b); // global c
 
     if (a == b) {
         c = a + b;
@@ -207,19 +232,43 @@ int main() {
     else {
         c = a * b; // c = 75
     }
+    printInt(c);
 
     while (c > 0) {
         c = c / 2;
+        if (c > 10) {
+            continue;
+        }
+        printInt(c);
     }
 
-    testFunction(3 + 5, a + b);
+    for (int i = 0; i < 10; i = i + 1) {
+        if (i == 5) {
+            break;
+        }
+        if (i == 3) {
+            continue;
+        }
+        printInt(i);
+    }
 
-    printInt(c); // output 13
+    printInt(fib(10));
     return 0;
 }
 
+int fib(int a) {
+    if (a == 0) {
+        return 0;
+    }
+    if (a == 1) {
+        return 1;
+    }
+    return fib(a - 1) + fib(a - 2);
+
+}
+
 int testFunction(int a, int b) {
-    int c = a + b; // local c = a + b
+    int c = a + b;
     return c;
 }
 
@@ -232,6 +281,41 @@ void nothing() {
 ## 編譯器製作的心得
 
 這次的專案讓我對編譯器的運作有了更深入的了解，也讓我對 LLVM 有了初步的認識。
+
+## 使用方法
+
+### 編譯出 compiler.exe
+
+``` bash
+make
+```
+
+### 使用 compiler.exe 編譯程式
+
+``` bash
+compiler.exe < test.c
+```
+
+### 使用 gcc 將目標語言編譯成執行檔
+
+``` bash
+g++ -o test.exe output.o
+```
+
+### 我自己寫的測試
+
+``` bash
+make run
+```
+
+其中會執行以下指令，使用了 IO.cpp 中的 printInt 和 printDouble 函數，來進行輸出。
+
+``` bash
+./compiler.exe < correct_code.c
+g++ IO.cpp -c -o IO.o
+g++ output.o IO.o -o output
+./output.exe
+```
 
 ## 參考文獻
 
