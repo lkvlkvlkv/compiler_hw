@@ -5,6 +5,7 @@ OBJS = grammar.o \
 		codeGen.o \
 		main.o	 \
 		objGen.o \
+		typeSystem.o \
 
 LLVMCONFIG = llvm-config
 INCLUDEDIR = `$(LLVMCONFIG) --includedir`

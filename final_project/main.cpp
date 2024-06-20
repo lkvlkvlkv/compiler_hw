@@ -1,18 +1,16 @@
 #include <iostream>
 #include "node.hpp"
 #include <memory>
-// #include "CodeGen.hpp"
+#include "CodeGen.hpp"
+#include "ObjGen.hpp"
 
-
-extern std::shared_ptr<NBlock> programBlock;
+extern NProgram* programBlock;
 extern int yyparse();
 
 int main() {
     yyparse();
-    std::cout << programBlock << std::endl;
-
-    // CodeGenContext context;
-    // context.generateCode(*programBlock);
-
+    CodeGenContext context;
+    context.generateCode(*programBlock);
+    ObjGen(context);
     return 0;
 }
